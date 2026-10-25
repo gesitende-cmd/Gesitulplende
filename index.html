@@ -1327,6 +1327,219 @@ html[data-view="mobile"] .au-time { font-size: 1.4rem; }
 
 </style>
 
+<!-- SMPC-BLOCK -->
+<style>
+/* ===== SMP Command Center (scoped) ===== */
+.smpc{
+  --bg:#080d18; --line:rgba(148,163,184,.16); --line2:rgba(148,163,184,.28);
+  --ink:#e8eefc; --muted:#8fa1bf; --dim:#5f7291;
+  --cy:#38bdf8; --gr:#34d399; --am:#f59e0b; --rd:#f43f5e; --pu:#a78bfa;
+  position:relative; overflow:hidden; border-radius:16px;
+  background:
+    radial-gradient(1200px 380px at 12% -10%, rgba(56,189,248,.13), transparent 60%),
+    radial-gradient(900px 320px at 92% 0%, rgba(167,139,250,.10), transparent 62%),
+    linear-gradient(180deg,#0a1120 0%, #080d18 100%);
+  border:1px solid rgba(148,163,184,.22);
+  color:var(--ink);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  box-shadow:0 24px 60px -30px rgba(2,6,23,.75), inset 0 1px 0 rgba(255,255,255,.04);
+  isolation:isolate;
+}
+.smpc *{box-sizing:border-box}
+.smpc::before{
+  content:""; position:absolute; inset:0; z-index:0; pointer-events:none; opacity:.5;
+  background-image:
+    linear-gradient(rgba(148,163,184,.055) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(148,163,184,.055) 1px, transparent 1px);
+  background-size:44px 44px;
+  mask-image:radial-gradient(120% 80% at 50% 0%, #000 30%, transparent 78%);
+  -webkit-mask-image:radial-gradient(120% 80% at 50% 0%, #000 30%, transparent 78%);
+}
+.smpc::after{
+  content:""; position:absolute; left:-30%; top:-60%; width:160%; height:120%; z-index:0; pointer-events:none;
+  background:conic-gradient(from 210deg at 50% 50%, transparent 0deg, rgba(56,189,248,.06) 40deg, transparent 90deg);
+  animation:smpc-sweep 14s linear infinite;
+}
+@keyframes smpc-sweep{ to{ transform:rotate(360deg); } }
+.smpc > *{ position:relative; z-index:1 }
+
+.smpc-hd{display:flex; align-items:flex-start; gap:16px; padding:20px 22px 16px; border-bottom:1px solid var(--line);
+  background:linear-gradient(180deg, rgba(13,21,38,.85), rgba(8,13,24,.2)); flex-wrap:wrap}
+.smpc-eyebrow{display:inline-flex; align-items:center; gap:7px; font-size:10.5px; letter-spacing:.18em;
+  text-transform:uppercase; color:var(--cy); font-weight:800}
+.smpc-eyebrow::before{content:""; width:6px; height:6px; border-radius:50%; background:var(--cy);
+  box-shadow:0 0 0 3px rgba(56,189,248,.18); animation:smpc-pulse 2.4s ease-in-out infinite}
+@keyframes smpc-pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.45;transform:scale(.82)}}
+.smpc-hd h3{margin:6px 0 3px; font-size:19px; font-weight:800; letter-spacing:-.015em; line-height:1.25}
+.smpc-hd p{margin:0; font-size:12px; color:var(--muted)}
+.smpc-badge{margin-left:auto; text-align:right; padding:9px 14px; border-radius:12px; white-space:nowrap;
+  background:linear-gradient(135deg, rgba(205,127,50,.18), rgba(245,158,11,.10));
+  border:1px solid rgba(245,158,11,.45); box-shadow:0 0 24px -6px rgba(245,158,11,.35) inset}
+.smpc-badge span{display:block; font-size:9.5px; letter-spacing:.16em; text-transform:uppercase; color:#fbbf24; font-weight:800}
+.smpc-badge b{display:block; font-size:21px; font-weight:800; letter-spacing:-.02em; color:#fde68a; line-height:1.15;
+  font-variant-numeric:tabular-nums}
+.smpc-badge i{display:block; font-size:10.5px; font-style:normal; color:var(--muted); margin-top:2px}
+
+.smpc-kpi{display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--line);
+  border-bottom:1px solid var(--line)}
+.smpc-kpi > div{background:linear-gradient(180deg, rgba(13,21,38,.7), rgba(8,13,24,.55)); padding:13px 18px}
+.smpc-kpi .k{font-size:9.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--dim); font-weight:800}
+.smpc-kpi .v{font-size:23px; font-weight:800; letter-spacing:-.02em; margin-top:3px; font-variant-numeric:tabular-nums}
+.smpc-kpi .s{font-size:10.5px; color:var(--muted); margin-top:1px}
+
+.smpc-hero{display:grid; grid-template-columns:300px 1fr; gap:22px; padding:22px; align-items:center}
+.smpc-gauge{display:flex; flex-direction:column; align-items:center; gap:8px}
+.smpc-gauge svg{width:200px; height:200px; overflow:visible}
+.smpc-gauge .ring-bg{fill:none; stroke:rgba(148,163,184,.16); stroke-width:11}
+.smpc-gauge .ring-fg{fill:none; stroke:url(#smpcGrad); stroke-width:11; stroke-linecap:round;
+  transform:rotate(-90deg); transform-origin:50% 50%; transition:stroke-dashoffset 1.4s cubic-bezier(.2,.8,.2,1)}
+.smpc-gauge .val{font-size:34px; font-weight:800; letter-spacing:-.03em; fill:#fff}
+.smpc-gauge .sub{font-size:11px; fill:#8fa1bf; letter-spacing:.06em}
+.smpc-gauge .cap{font-size:11px; color:var(--muted); text-align:center; line-height:1.45}
+.smpc-gauge .cap b{color:#fde68a}
+
+.smpc-elems{display:flex; flex-direction:column; gap:11px}
+.smpc-el{display:grid; grid-template-columns:150px 1fr 74px; gap:12px; align-items:center}
+.smpc-el .nm{font-size:12px; font-weight:700; color:var(--ink); display:flex; align-items:center; gap:7px}
+.smpc-el .nm i{width:7px; height:7px; border-radius:2px; flex:0 0 auto}
+.smpc-el .nm em{font-style:normal; font-size:9.5px; color:var(--dim); font-weight:700; letter-spacing:.08em}
+.smpc-el .track{height:9px; border-radius:99px; background:rgba(148,163,184,.14); overflow:hidden; position:relative}
+.smpc-el .fill{height:100%; width:0; border-radius:99px; transition:width 1.1s cubic-bezier(.2,.8,.2,1);
+  box-shadow:0 0 14px -2px currentColor}
+.smpc-el .pc{font-size:12.5px; font-weight:800; text-align:right; font-variant-numeric:tabular-nums}
+.smpc-el .pc small{display:block; font-size:9.5px; color:var(--dim); font-weight:600; letter-spacing:.04em}
+
+.smpc-tabs{display:flex; gap:4px; padding:0 18px; border-bottom:1px solid var(--line); overflow-x:auto;
+  scrollbar-width:none}
+.smpc-tabs::-webkit-scrollbar{display:none}
+.smpc-tab{position:relative; border:0; background:none; cursor:pointer; padding:12px 13px 11px; white-space:nowrap;
+  font-size:12.5px; font-weight:700; color:var(--muted); transition:color .2s}
+.smpc-tab:hover{color:#cbd5e1}
+.smpc-tab[aria-selected="true"]{color:#fff}
+.smpc-tab[aria-selected="true"]::after{content:""; position:absolute; left:10px; right:10px; bottom:-1px; height:2px;
+  border-radius:2px; background:linear-gradient(90deg,var(--cy),var(--pu)); box-shadow:0 0 12px rgba(56,189,248,.7)}
+.smpc-tab .cnt{display:inline-block; margin-left:6px; font-size:10px; padding:1px 6px; border-radius:99px;
+  background:rgba(148,163,184,.16); color:#cbd5e1; font-weight:800}
+
+.smpc-pane{display:none; padding:20px 22px 24px}
+.smpc-pane.on{display:block; animation:smpc-fade .35s ease both}
+@keyframes smpc-fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+.smpc-grid{display:grid; gap:12px}
+.smpc-g5{grid-template-columns:repeat(5,1fr)}
+.smpc-card{border:1px solid var(--line); border-radius:12px; padding:13px 14px;
+  background:linear-gradient(180deg, rgba(19,29,48,.75), rgba(11,18,32,.6));
+  transition:transform .25s ease, border-color .25s ease, box-shadow .25s ease}
+.smpc-card:hover{transform:translateY(-2px); border-color:var(--line2);
+  box-shadow:0 16px 30px -22px rgba(56,189,248,.55)}
+.smpc-card .t{font-size:11.5px; font-weight:800; display:flex; align-items:center; gap:6px; margin-bottom:6px}
+.smpc-card .t i{width:6px;height:6px;border-radius:2px}
+.smpc-card .big{font-size:24px; font-weight:800; letter-spacing:-.02em; font-variant-numeric:tabular-nums}
+.smpc-card .lbl{font-size:10px; color:var(--dim); letter-spacing:.06em; text-transform:uppercase; font-weight:700}
+.smpc-card .desc{font-size:10.5px; color:var(--muted); margin-top:7px; line-height:1.45}
+
+.smpc-heat{display:grid; grid-template-columns:repeat(auto-fill,minmax(15px,1fr)); gap:3px; margin-top:4px}
+.smpc-cell{aspect-ratio:1; border-radius:3px; cursor:pointer; border:1px solid rgba(255,255,255,.05);
+  transition:transform .15s ease, box-shadow .15s ease}
+.smpc-cell:hover{transform:scale(1.35); z-index:3; box-shadow:0 0 0 1px #fff, 0 0 14px rgba(255,255,255,.35)}
+.smpc-cell.s2{background:rgba(52,211,153,.85)}
+.smpc-cell.s1{background:rgba(245,158,11,.8)}
+.smpc-cell.s0{background:rgba(244,63,94,.85)}
+
+.smpc-bar{display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin-bottom:12px}
+.smpc-search{flex:1; min-width:180px; display:flex; align-items:center; gap:8px; padding:8px 12px; border-radius:10px;
+  background:rgba(15,23,42,.75); border:1px solid var(--line)}
+.smpc-search input{flex:1; background:none; border:0; outline:none; color:var(--ink); font-size:12.5px}
+.smpc-search input::placeholder{color:var(--dim)}
+.smpc-chip{border:1px solid var(--line); background:rgba(15,23,42,.6); color:var(--muted); cursor:pointer;
+  font-size:11.5px; font-weight:700; padding:6px 11px; border-radius:99px; transition:all .2s; white-space:nowrap}
+.smpc-chip:hover{color:#fff; border-color:var(--line2)}
+.smpc-chip.on{background:linear-gradient(135deg, rgba(56,189,248,.2), rgba(167,139,250,.16)); color:#fff;
+  border-color:rgba(56,189,248,.55); box-shadow:0 0 16px -6px rgba(56,189,248,.8)}
+.smpc-sel{background:rgba(15,23,42,.75); border:1px solid var(--line); color:var(--ink); font-size:11.5px;
+  font-weight:600; padding:7px 9px; border-radius:9px; outline:none}
+
+.smpc-list{display:flex; flex-direction:column; gap:6px; max-height:560px; overflow:auto; padding-right:4px}
+.smpc-list::-webkit-scrollbar{width:8px}
+.smpc-list::-webkit-scrollbar-thumb{background:rgba(148,163,184,.3); border-radius:8px}
+.smpc-item{border:1px solid var(--line); border-radius:10px; background:rgba(13,21,38,.55); overflow:hidden;
+  transition:border-color .2s, background .2s}
+.smpc-item:hover{border-color:var(--line2); background:rgba(19,29,48,.75)}
+.smpc-item.open{border-color:rgba(56,189,248,.45); background:rgba(15,26,45,.9)}
+.smpc-row{display:grid; grid-template-columns:44px 1fr 96px 18px; gap:10px; align-items:center;
+  padding:9px 12px; cursor:pointer}
+.smpc-row .no{font-size:11px; font-weight:800; color:var(--dim); font-variant-numeric:tabular-nums}
+.smpc-row .tx{font-size:12px; color:#d7e1f5; line-height:1.45}
+.smpc-pill{font-size:9.5px; font-weight:800; letter-spacing:.07em; text-transform:uppercase; text-align:center;
+  padding:4px 6px; border-radius:6px}
+.smpc-pill.s2{color:#6ee7b7; background:rgba(52,211,153,.14); border:1px solid rgba(52,211,153,.35)}
+.smpc-pill.s1{color:#fcd34d; background:rgba(245,158,11,.14); border:1px solid rgba(245,158,11,.35)}
+.smpc-pill.s0{color:#fda4af; background:rgba(244,63,94,.14); border:1px solid rgba(244,63,94,.38)}
+.smpc-row .ar{color:var(--dim); transition:transform .25s; font-size:10px; text-align:center}
+.smpc-item.open .ar{transform:rotate(90deg); color:var(--cy)}
+.smpc-det{display:none; padding:0 14px 13px 66px; font-size:11.5px; color:var(--muted); line-height:1.6}
+.smpc-item.open .smpc-det{display:block; animation:smpc-fade .25s ease both}
+.smpc-det .k{font-size:9.5px; letter-spacing:.12em; text-transform:uppercase; color:var(--dim); font-weight:800;
+  display:block; margin-top:8px}
+.smpc-det .v{color:#cbd5e1}
+.smpc-det .bad{color:#fda4af}
+.smpc-det .good{color:#6ee7b7}
+.smpc-ref{display:inline-block; font-family:ui-monospace,Menlo,Consolas,monospace; font-size:10.5px;
+  background:rgba(148,163,184,.1); border:1px solid var(--line); padding:1px 6px; border-radius:5px; margin:2px 4px 0 0}
+
+.smpc-tbl{width:100%; border-collapse:collapse; font-size:11.5px}
+.smpc-tbl th{text-align:left; font-size:9.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--dim);
+  font-weight:800; padding:8px 10px; border-bottom:1px solid var(--line2); position:sticky; top:0;
+  background:#0b1220; z-index:2}
+.smpc-tbl td{padding:9px 10px; border-bottom:1px solid var(--line); vertical-align:top; color:#cbd5e1; line-height:1.5}
+.smpc-tbl tr:hover td{background:rgba(56,189,248,.045)}
+.smpc-tbl .no{color:var(--dim); font-weight:800; white-space:nowrap; font-variant-numeric:tabular-nums}
+.smpc-wrap{max-height:520px; overflow:auto; border:1px solid var(--line); border-radius:10px}
+.smpc-wrap::-webkit-scrollbar{width:8px;height:8px}
+.smpc-wrap::-webkit-scrollbar-thumb{background:rgba(148,163,184,.3); border-radius:8px}
+
+.smpc-note{font-size:11px; color:var(--dim); line-height:1.6; margin-top:12px; padding:10px 12px;
+  border-left:2px solid rgba(56,189,248,.4); background:rgba(56,189,248,.05); border-radius:0 8px 8px 0}
+.smpc-note b{color:#cbd5e1}
+.smpc-empty{padding:30px; text-align:center; color:var(--dim); font-size:12px}
+.smpc-two{display:grid; grid-template-columns:1fr 1fr; gap:14px}
+.smpc-h4{font-size:12px; font-weight:800; letter-spacing:.02em; margin:0 0 9px; color:#dbe6f8;
+  display:flex; align-items:center; gap:8px}
+.smpc-h4::before{content:""; width:3px; height:12px; border-radius:2px; background:linear-gradient(180deg,var(--cy),var(--pu))}
+.smpc-kv{display:grid; grid-template-columns:110px 1fr; gap:6px 12px; font-size:11.5px; margin:0}
+.smpc-kv dt{color:var(--dim); font-weight:700}
+.smpc-kv dd{margin:0; color:#d7e1f5}
+.smpc-team{display:flex; flex-wrap:wrap; gap:6px; margin-top:6px}
+.smpc-team span{font-size:10.5px; padding:4px 9px; border-radius:99px; border:1px solid var(--line);
+  background:rgba(148,163,184,.08); color:#cbd5e1}
+.smpc-ladder{display:flex; flex-direction:column; gap:7px; margin-top:4px}
+.smpc-step{display:grid; grid-template-columns:74px 1fr 52px; gap:10px; align-items:center; font-size:11.5px}
+.smpc-step .tr{height:7px; border-radius:99px; background:rgba(148,163,184,.14); overflow:hidden}
+.smpc-step .tr i{display:block; height:100%; border-radius:99px}
+
+@media (max-width:900px){
+  .smpc-hero{grid-template-columns:1fr}
+  .smpc-g5{grid-template-columns:repeat(2,1fr)}
+  .smpc-kpi{grid-template-columns:repeat(2,1fr)}
+  .smpc-two{grid-template-columns:1fr}
+  .smpc-el{grid-template-columns:110px 1fr 64px}
+  .smpc-row{grid-template-columns:38px 1fr 84px 14px}
+  .smpc-det{padding-left:14px}
+}
+@media (max-width:560px){
+  .smpc-hd{padding:16px}
+  .smpc-badge{margin-left:0}
+  .smpc-pane{padding:16px}
+  .smpc-el{grid-template-columns:96px 1fr 56px; gap:8px}
+  .smpc-kpi .v{font-size:19px}
+}
+@media (prefers-reduced-motion:reduce){
+  .smpc::after{animation:none}
+  .smpc-eyebrow::before{animation:none}
+  .smpc-gauge .ring-fg,.smpc-el .fill{transition:none}
+  .smpc-pane.on{animation:none}
+}
+</style>
 </head>
 <body class="bg-gradient-to-br from-slate-50 to-slate-100">
     <!-- Indikator sesi aktif (muncul saat aplikasi dibuka di 2+ akun/tab sekaligus) -->
@@ -2901,12 +3114,61 @@ html[data-view="mobile"] .au-time { font-size: 1.4rem; }
 
                     <div class="grid grid-cols-1 gap-6">
                         <!-- SMP: Sistem Manajemen Pengamanan (scorecard, buka-tutup) -->
-                        <div class="bg-white rounded-xl shadow-lg border border-slate-200" id="smp-section">
+                        <!-- ===== SMP Command Center (audit 118 kriteria) ===== -->
+<div class="smpc" id="smpcRoot">
+  <div class="smpc-hd">
+    <div>
+      <span class="smpc-eyebrow">SMP Command Center &middot; Perpol 7/2019</span>
+      <h3>Sistem Manajemen Pengamanan</h3>
+      <p id="smpcSub">Audit internal &middot; 118 kriteria &middot; 5 elemen</p>
+    </div>
+    <div class="smpc-badge">
+      <span>Predikat</span>
+      <b id="smpcScore">0%</b>
+      <i id="smpcVerdict">&mdash;</i>
+    </div>
+  </div>
+  <div class="smpc-kpi" id="smpcKpi"></div>
+  <div class="smpc-hero">
+    <div class="smpc-gauge">
+      <svg viewBox="0 0 200 200" role="img" aria-label="Skor SMP keseluruhan">
+        <defs>
+          <linearGradient id="smpcGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#38bdf8"/><stop offset="55%" stop-color="#a78bfa"/><stop offset="100%" stop-color="#f59e0b"/>
+          </linearGradient>
+        </defs>
+        <circle class="ring-bg" cx="100" cy="100" r="82"/>
+        <circle class="ring-fg" id="smpcRing" cx="100" cy="100" r="82"
+                stroke-dasharray="515.22" stroke-dashoffset="515.22"/>
+        <text class="val" id="smpcRingVal" x="100" y="104" text-anchor="middle">0%</text>
+        <text class="sub" x="100" y="126" text-anchor="middle">SKOR SMP</text>
+      </svg>
+      <div class="cap" id="smpcCap"></div>
+    </div>
+    <div class="smpc-elems" id="smpcElems"></div>
+  </div>
+  <nav class="smpc-tabs" id="smpcTabs" role="tablist" aria-label="Bagian SMP">
+    <button type="button" class="smpc-tab" role="tab" data-pane="ringkasan" aria-selected="true">Ringkasan</button>
+    <button type="button" class="smpc-tab" role="tab" data-pane="kriteria" aria-selected="false">118 Kriteria <span class="cnt" id="cntKriteria">118</span></button>
+    <button type="button" class="smpc-tab" role="tab" data-pane="temuan" aria-selected="false">Temuan <span class="cnt" id="cntTemuan">0</span></button>
+    <button type="button" class="smpc-tab" role="tab" data-pane="rekom" aria-selected="false">Rekomendasi <span class="cnt" id="cntRekom">0</span></button>
+    <button type="button" class="smpc-tab" role="tab" data-pane="rencana" aria-selected="false">Rencana &amp; Tim</button>
+    <button type="button" class="smpc-tab" role="tab" data-pane="panduan" aria-selected="false">Panduan Nilai</button>
+  </nav>
+  <div class="smpc-pane on" id="pane-ringkasan" role="tabpanel"></div>
+  <div class="smpc-pane" id="pane-kriteria" role="tabpanel"></div>
+  <div class="smpc-pane" id="pane-temuan" role="tabpanel"></div>
+  <div class="smpc-pane" id="pane-rekom" role="tabpanel"></div>
+  <div class="smpc-pane" id="pane-rencana" role="tabpanel"></div>
+  <div class="smpc-pane" id="pane-panduan" role="tabpanel"></div>
+</div>
+
+<div class="bg-white rounded-xl shadow-lg border border-slate-200" id="smp-section">
                             <button type="button" id="smp-toggle" onclick="smpToggle()" aria-expanded="false" aria-controls="smp-body" class="w-full flex items-center gap-3 px-4 py-3 text-left">
                                 <svg class="w-5 h-5 text-blue-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
                                 <span class="flex-1 min-w-0">
-                                    <span class="block font-bold text-slate-800 text-base leading-tight">SMP &mdash; Sistem Manajemen Pengamanan</span>
-                                    <span class="block text-xs text-slate-500">Scorecard pemenuhan per unit &middot; ketuk untuk membuka</span>
+                                    <span class="block font-bold text-slate-800 text-base leading-tight">Scorecard bulanan unit (self-assessment)</span>
+                                    <span class="block text-xs text-slate-500">Penilaian mandiri 10 unsur per unit &middot; ketuk untuk membuka</span>
                                 </span>
                                 <span id="smp-badge" class="text-xs font-bold px-2.5 py-1 rounded-full bg-slate-100 text-slate-600 whitespace-nowrap"></span>
                                 <svg id="smp-chevron" class="w-4 h-4 text-slate-500 transition-transform duration-300 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
@@ -9055,5 +9317,395 @@ html[data-view="mobile"] .au-time { font-size: 1.4rem; }
 })();
 </script>
 
+<!-- SMPC-BLOCK -->
+<script>
+/* SMP Command Center — data audit 118 kriteria (Perpol 7/2019) */
+window.SMPC = {"unit":"PT Paiton Operation Maintenance Indonesia","lokasi":"Desa Bhinor, Kec. Paiton, Kab. Probolinggo, Jawa Timur","periode":"19–21 Oktober 2022","standar":"Perpol No. 7/2019 · Perkaba No. 1/2019","tim":["Muttaqin Hani Susilo (Ketua)","Febri Antami","Frans Juan Ady Mbeo","Galih Irvan Setiaji","M. Rizki Agusta","Arief Prakoso"],"elems":[{"n":"Komitmen dan Kebijakan","s":"Komitmen & Kebijakan","w":0.15,"c":"#38bdf8","f":"Plan","d":"Kebijakan, sasaran, struktur, dan anggaran pengamanan yang ditetapkan manajemen puncak."},{"n":"Pola Pengamanan","s":"Pola Pengamanan","w":0.25,"c":"#a78bfa","f":"Do","d":"Penerapan pola pengamanan: SOP, patroli, akses, sarana, dan penanganan insiden."},{"n":"Konfigurasi Pengamanan","s":"Konfigurasi","w":0.3,"c":"#f59e0b","f":"Do","d":"Konfigurasi objek vital: area, personel, infrastruktur, dan kendali operasi."},{"n":"Standar Kemampuan Pelaksana Pengamanan","s":"Standar Kemampuan","w":0.2,"c":"#34d399","f":"Do","d":"Kompetensi, sertifikasi, dan kesiapan personel pengamanan."},{"n":"Monitoring dan Evaluasi SMP","s":"Monitoring & Evaluasi","w":0.1,"c":"#f472b6","f":"Check","d":"Audit internal, tinjauan manajemen, indikator kinerja, dan tindak lanjut."}],"kriteria":[{"e":0,"n":1,"s":2.0,"t":"Terdapat dokumen kebijakan pengamanan yang bertanggal dan di tanda tangani pimpinan puncak organisasi (isi: bentuk, metode, sifat, sasaran dan wilayah pengamanan serta kodal)","r":"N/A","f":"","k":""},{"e":0,"n":2,"s":2.0,"t":"Kebijakan pengamanan ditetapkan sesuai dengan perkiraan ancaman didasarkan pada sifat dan skala risiko keamanan.","r":"N/A","f":"","k":""},{"e":0,"n":3,"s":1.0,"t":"Kebijakan pengamanan bersifat dinamis (hasil evaluasi secara berkala).","r":"PP-03-64","f":"tidak ada tanda tangan di MOM HSES 111218 next meeting di jan 2020","k":"harus ada tanda tangan dalam MOM"},{"e":0,"n":4,"s":2.0,"t":"Kebijakan pengamanan dikomunikasikan kepada pihak internal organisasi (unsur manajemen dan pegawai/karyawan agar sadar dan memiliki tanggung jawab individu di bidang pengamanan organisasi).","r":"","f":"Ada refreshment SMP dan ISPS code serta adanya foto di akses umum (penjagaan dan ruang tamu)","k":""},{"e":0,"n":5,"s":1.0,"t":"Kebijakan pengamanan dikomunikasikan kepada pihak eksternal organisasi (agar masyarakat lingkungan sekitar membantu pengamanan organisasi).","r":"N/A","f":"belum ada tanda tangan dari pimpinan Rapat dalam Risalah rapat yg telah disepakati antara pihak internal dan eksternal . Daftar hadir tidak relvan dengan yang ada tanggal berbeda","k":"Risalah rapat yg telah disepakati antara pihak internal dan eksternal harus ditandatangani oleh Pemimpin Rapat sebelum didistribusikan ke pihak eksternal. Lampirkan dartaf hadir yang benar"},{"e":0,"n":6,"s":1.0,"t":"Penetapan Struktur Organisasi Pengamanan termasuk tanggung jawab dan wewenang yang didokumentasikan, dikomunikasikan dan harus tersedia personel yang cukup dan memadai untuk melaksanakan tugas pengamanan.","r":"N/A","f":"Struktur Organisasi Operasional Satuan Pengamanan_230220' (belum ada tanda tangan)","k":"Surat Penunjukan pejabat pembuat Struktur Organisasi yang baru perlu disertakan."},{"e":0,"n":7,"s":1.0,"t":"Terdapat penunjukan manajemen khusus yang diberi Tanggung Jawab Dan Wewenang Untuk Menerapkan SMP.","r":"N/A","f":"surat resmi yang dikeluarkan belum ada penomorannya","k":"Setiap surat resmi yang dikeluarkan oleh pihak Perusahaan harus diadministrasikan dengan baik yang ditandai dengan adanya nomor surat."},{"e":0,"n":8,"s":1.0,"t":"Terdapat penetapan pendokumentasian dan pengkomunikasian penyelenggaraan tata kelola pengamanan dan tugas pengamanan organisasi.","r":"PP-03-26-A02 PP-03-64 PP-03-05-F02 PP-03-22","f":"Tidak ada bukti penyelenggaraan tata kelola pengamanan berupa Laporan harian, mingguan maupun Bulanan.","k":"sertakan bukti laporan harian,mingguan, bulanan"},{"e":0,"n":9,"s":1.0,"t":"Sumber Daya dan Infrastruktur terinventarisasi guna menunjang Penerapan SMP.","r":"N/A","f":"tanda tangan Daftar Peralatan Pengamanan tidak disertai nama lengkap dan tanggal ditandatanganinya dokumen. daftar karyawan tidak ada masa aktif KTA Satpam","k":"Para pihak yg bertanda tangan pada Daftar Peralatan Pengamanan harus membubuhkan nama lengkap dan tanggal ditandatanganinya dokumen. Daftar anggota disertai masa aktif KTA"},{"e":0,"n":10,"s":2.0,"t":"Terdapat alokasi anggaran dan/atau biaya pengamanan guna menunjang penerapan SMP.","r":"PP-03-05-F02","f":"","k":""},{"e":0,"n":11,"s":2.0,"t":"Terdapat ketentuan untuk melaksanakan Audit SMP sesuai dengan ketentuan yang berlaku.","r":"PP-03-61","f":"","k":""},{"e":0,"n":12,"s":2.0,"t":"Terdapat penyelenggaraan audit SMP yang dilaksanakan secara berkala oleh auditor internal paling sedikit 1(satu) tahun sekali.","r":"N/A","f":"","k":""},{"e":0,"n":13,"s":1.0,"t":"Terdapat auditor internal yang memiliki kompetensi bidang SMP sesuai ketentuan peraturan perundang-undangan.","r":"N/A","f":"Sertifikasi SMP berlaku selama 3 (tiga) tahun","k":"terbitkan Surat penunjukan sebagai internal auditor SMP"},{"e":0,"n":14,"s":1.0,"t":"Terdapat catatan hasil audit SMP dan tindak lanjutnya guna memberikan umpan balik untuk semua pihak yang terkait.","r":"N/A","f":"th 2020 masih plan belum ada pelaksanaan","k":"laksanakan audit dan laporkan"},{"e":0,"n":15,"s":2.0,"t":"Terdapat penetapan mekanisme pelaksanaan Tinjauan manajemen tentang penerapan SMP, paling sedikit 1(satu) tahun sekali dan terdokumentasikan.","r":"PP-03-64","f":"","k":""},{"e":0,"n":16,"s":2.0,"t":"Terdapat bukti kehadiran pimpinan puncak dalam pelaksanaan rapat tinjauan manajemen SMP.","r":"N/A","f":"","k":""},{"e":0,"n":17,"s":1.0,"t":"Terdapat catatan hasil pelaksanaan dan tindak lanjut tinjauan manajemen SMP yang disahkan oleh pimpinan puncak Obvitnas dan objek tertentu.","r":"N/A","f":"Terdapat catatan hasil pelaksanaan dan tindak lanjut tinjauan manajemen SMP yg dihadiri (namun tidak ditandatangani) oleh Manajemen Puncak.","k":"harus ada tanda tangan di dalam MOM oleh manajemen"},{"e":0,"n":18,"s":2.0,"t":"Terdapat bukti peningkatan berkelanjutan penerapan SMP.","r":"N/A","f":"Tidak ada bukti dokumen tindak lanjut kegiatan SMP","k":"Laksanakan tindak lanjut kegiatan SPM dan terdokumentasikan dalam surat dan foto"},{"e":1,"n":1,"s":1.0,"t":"Terdapat dokumen kerangka kerja dan panduan praktis dalam melaksanakan manajemen resiko pengamanan.","r":"PP-03-26-A02 PP-03-05 006/EUD-II/2012 PP-03-05-F02 PP-03-05-F02 PP-03-05-F03 PP-03-06, FM-","f":"- Dokumen Prosedur yang dilampirkan tidak dapat divalidasi kelengkapannya, perlu adanya dokumen daftar induk dokumen pengamanan. Pada Dokumen SMP bagian referensi disebutkan prosedur yang ada, namun tidak dilampirkan sebagai eviden. - Dokumen HIRA lebih mengacu pada K3, belum ada mitigasi kam preemtif - preventif - represif, belum dapat menunjukkan Analisis Risiko Pengamanan.","k":""},{"e":1,"n":2,"s":1.0,"t":"Terdapat Analisis risiko pengamanan dalam bentuk catatan tabel hasil penilaian yang dibuat oleh perusahaan/Pam internal (identifikasi aset organisasi, penilaian dan penetapan ancaman/gangguan, penetapan resiko kerugian, peluang kejadian dan penetapan tingkat resiko pengamanan).","r":"N/A","f":"- Dokumen HIRA lebih mengacu pada K3, belum ada mitigasi kam preemtif - preventif - represif, belum dapat menunjukkan Analisis Risiko Pengamanan. - Belum ada SRA (Security Risk Assessment Document) / ARP","k":"Dilakukan kegiatan SRA and dokumen SRA/Risk Register disahkan oleh pejabat yang berwenang."},{"e":1,"n":3,"s":0.0,"t":"Hasil manajemen resiko pengamanan dikerjakan oleh personel yang memiliki kompetensi yang relevan.","r":"006/EUD-II/2012","f":"Certificate Diklat bukan Certificate Kompetensi","k":""},{"e":1,"n":4,"s":1.0,"t":"Terdapat penetapan pilihan mitigasi resiko pengamanan untuk setiap fungsi di organisasi untuk mengurangi resiko kejadian.","r":"E_PI-03-5-02","f":"Belum spesifik terkait dengan Security Risk Assessmen / ARP","k":"Menambahkan poin spesifik terkait SRA kedalam SOP."},{"e":1,"n":5,"s":1.0,"t":"Terdapat penetapan sumber data dan informasi sebagai dasar dalam penilaian resiko pengamanan organisasi.","r":"E_PI-03-5-02","f":"Belum spesifik terkait dengan Security Risk Assessment / ARP","k":"Menambahkan poin spesifik terkait SRA kedalam SOP."},{"e":1,"n":6,"s":0.0,"t":"Terdapat penilaian ulang (re-assesment) risiko pengamanan.","r":"","f":"Belum ditemukan evidence kegiatan pelaksanaan Re-assessment SRA","k":"Membuat dan melaksanakan kegiatan SRA."},{"e":1,"n":7,"s":1.0,"t":"Penetapan dan pelaksanaan pengamanan langsung dalam bentuk pengerahan dan penggelaran kekuatan beserta sarana prasarana pengamanan sesuai kebutuhan dan perkiraan ancaman dan/atau gangguan kamtibmas yang mungkin terjadi.","r":"N/A","f":"Terdapat dokumen HIRA yang sudah disahkan namun Risk Register belum disahkan oleh pejabat yang berwenang. Belum ada SRA (Security Risk Assessment Document)","k":"Dilakukan kegiatan SRA and dokumen SRA/Risk Register disahkan oleh pejabat yang berwenang."},{"e":1,"n":8,"s":2.0,"t":"Penetapan dan pelaksanaan pengamanan tidak langsung dalam bentuk pemantauan, pengawasan dan penerimaan laporan dari pengelola obvitnas dan objek tertentu.","r":"N/A FM-SMP-GITETPAITON-003","f":"Terdapat dokumen HIRA yang sudah disahkan namun Risk Register belum disahkan oleh pejabat yang berwenang. Belum ada SRA (Security Risk Assessment Document)","k":"Dilakukan kegiatan SRA and dokumen SRA/Risk Register disahkan oleh pejabat yang berwenang."},{"e":1,"n":9,"s":1.0,"t":"Terdapat penetapan pengendalian operasional pengamanan langsung dan tidak langsung terhadap objek pengamanan.","r":"PKB NO. POL B/117/I/2014/Polres","f":"Belum ditemukan evidence terkait penetapan pengendalian operasional pengamanan dari BUJP. Dokumen SPRINT/Surat Tugas untuk pengamanan tidak langsung juga belum ada.","k":"Penunjukan dokumen seperti PKS/Surat Tugas untuk pengamanan langsung dan SPRINT/Surat Tugas untuk pengamanan tidak langsung perusahanaan sebagai tolak ukur efektifitas pelaksanaan bentuk pengamanan."},{"e":1,"n":10,"s":2.0,"t":"Pengukuran efektivitas pelaksanaan bentuk pengamanan.","r":"70066/PE/IPMOMI/19","f":"Draft Contract file sudah ada namun belum ditandatangani.","k":"Penunjukan dokumen seperti PKS/Surat Tugas dari masing-masing BUJP atau internal perusahanaan sebagai tolak ukur efektifitas pelaksanaan bentuk pengamanan."},{"e":1,"n":1,"s":1.0,"t":"Penetapan sifat pengamanan terbuka dan tertutup sesuai dengan analisis risiko yang telah ditetapkan oleh pimpinan.","r":"N/A PP-03-05-F02 PP-03-05-F02 PP-03-05-F03","f":"- HIRA yang dilampirkan belum mencakup penetapan mitigasi dan pengesahan pimpinan","k":""},{"e":1,"n":2,"s":1.0,"t":"Pengerahan dan penempatan personel pengamanan sesuai dengan struktur organisasi yang telah ditetapkan","r":"N/A","f":"- Informasi jumlah personel BUJP tidak sesuai dengan Renpam Rev. 4 - Struktur Organisasi Pengamanan belum disahkan oleh pimpinan","k":"Perlu penyesuaian jumlah di Renpam"},{"e":1,"n":3,"s":1.0,"t":"Pelaksanaan pengamanan terbuka dan tertutup sesuai dengan cara bertindak yang telah ditetapkan dalam bentuk dokumen kebijakan pengamanan.","r":"N/A PP-03-05-F02 PP-03-05-F02 PP-03-05-F03","f":"- Terdapat dokumen HIRA yang sudah disahkan namun Risk Register belum disahkan oleh pejabat yang berwenang. - Belum ada SRA (Security Risk Assessment Document)","k":"Dilakukan kegiatan SRA and dokumen SRA/Risk Register disahkan oleh pejabat yang berwenang."},{"e":1,"n":4,"s":1.0,"t":"Pengendalian operasional pelaksanaan pengamanan terbuka dan tertutup.","r":"N/A PP-03-05-F02 PP-03-05-F02 PP-03-05-F03","f":"","k":""},{"e":1,"n":5,"s":0.0,"t":"Terdapat infrastruktur/fasilitas dan alat bantu pengamanan yang digunakan dalam pengamanan terbuka dan tertutup yang di pastikan dalam kondisi layak pakai.","r":"","f":"Tidak didapatkan bukti pelaporan pemeriksaan berkala atau inventarisasi infrastruktur pengamanan.","k":""},{"e":1,"n":6,"s":0.0,"t":"Terdapat pembagian zona sesuai dengan hasil analisis resiko pengamanan (zona bebas, zona terbatas dan zona terlarang)","r":"PP-03-05-F02 PP-03-05-F02 PP-03-05-F03 PP-05-22","f":"- Zonasi tidak ditunjukkan pembagian zona pada area kerja sesuai hasil analisis risiko (bukan dokumen analisis risiko)","k":""},{"e":1,"n":7,"s":1.0,"t":"Terdapat catatan /rekaman kegiatan pengendalian operasional pengamanan tempat kerja, infrastruktur dan fasilitas organisasi.","r":"","f":"- Laporan bulanan BUJP yang dilampirkan hanya menjelaskan daftar piket petugas pengamanan, belum ada eviden lain seperti inventarisasi aset pengamanan, laporan kegiatan, buku mutasi, keluar-masuk barang, dll.","k":""},{"e":1,"n":8,"s":1.0,"t":"Terdapat bukti penerapan pengendalian operasional pengamanan terbuka dengan memberikan tanda pengenal terhadap karyawan, mitra kerja, pengunjung, termasuk barang dan kendaraan.","r":"E_PI-03-26-05 E_PI-03-26-07 E_PI-03-26--04","f":"- Belum ditunjukkan eviden kegiatan dari penerapan SOP yang sudah dimiliki","k":""},{"e":1,"n":9,"s":1.0,"t":"Terdapat bukti penerapan pengendalian pengamanan terbuka dan tertutup terhadap pengadaan, distribusi, penerimaan dan penyimpanan barang dan jasa.","r":"E_PI-03-26-11 E_PI-03-26-02 E_PI-03-26-14 E_PI-03-26-04","f":"- Tidak ada eviden laporan terkait implementasi pengamanan pengadaan barang & jasa, keluar & masuk barang","k":""},{"e":1,"n":10,"s":2.0,"t":"Terdapat bukti evaluasi secara periodik terhadap pelaksanaan pengamanan oleh internal yang ditempatkan oleh BUJP atau pengguna jasa pengamanan dan/atau oleh jasa pengamanan yang ditugaskan oleh Polri.","r":"70066/PE/IPMOMI/19 DRM-OPR-002","f":"","k":""},{"e":1,"n":11,"s":2.0,"t":"Pengukuran efektivitas pelaksanaan pengamanan terbuka atau tertutup dalam bentuk laporan anev.","r":"70066/PE/IPMOMI/19","f":"","k":""},{"e":1,"n":1,"s":1.0,"t":"Penetapan sasaran pengamanan telah sesuai dengan identifikasi potensi kerawanan terhadap manusia, barang, fasilitas, dokumen/informasi, tempat dan kegiatan yang dibuat dalam bentuk tertulis.","r":"- PP-03-05. - PP-03-05-F02","f":"1. Pada Dokumen HIRA belum dapat ditunjukan risiko Pengamanan yang meliputi preemtif, preventif dan represif.","k":""},{"e":1,"n":2,"s":1.0,"t":"Pemanfaatan dan pengelolaan sumber daya organisasi yang meliputi manusia, sarana prasarana dan anggaran untuk mendukung sasaran pengamanan.","r":"- PI-03-26-05 - 01116 B - ISPS/TDE/31/03/16/002 - 00445/PFSO/DIKSUS/VI/2004 - ISPS/PFSO/23","f":"1. Belum ada Dokumen Infrastruktur Sarana Pengamanan 2. Belum ada Dokumen Monitoring Anggaran untuk Program kerja Pengamanan.","k":""},{"e":1,"n":3,"s":1.0,"t":"Pengadaan peralatan dan perlengkapan untuk mendukung sasaran pengamanan berdasarkan standardisasi peralatan dan perlengkapan yang telah ditetapkan.","r":"- - PI-03-26-05 - PP-03-05-F02","f":"1. Pada Daftar Peralatan Pengamanan belum ada approval pimpinan perusahaan. 2. Belum terdapat daftar pengadaan infrastruktuk Pengamanan.","k":""},{"e":1,"n":4,"s":1.0,"t":"Penetapan sasaran pengamanan harus terukur dengan indikator yang jelas untuk setiap sasaran pengamanan.","r":"- PP-03-05. - PP-03-05-F02","f":"1. Pada Dokumen HIRA belum dapat ditunjukan risiko Pengamanan yang meliputi preemtif, preventif dan represif. 2. Belum ada Laporan OTP program pengamanan.","k":"1. Pada folder eviden kriteria yang lain sudah terdapat dokumen OTP, lampirkan pada kriteria ini"},{"e":1,"n":5,"s":1.0,"t":"Terdapat pernyataan terdokumentasi menetapkan, menerapkan, dan memelihara tujuan dan sasaran pengamanan disetiap fungsi dan tingkatan yang relevan dalam organisasi.","r":"- - PP-03-05. - PP-03-05-F02 - PP-03-05-F02","f":"1. Pada Dokumen HIRA belum dapat ditunjukan risiko Pengamanan yang meliputi preemtif, preventif dan represif. 2. Belum ada Laporan OTP program pengamanan.","k":"1. Pada folder eviden kriteria yang lain sudah terdapat dokumen OTP, lampirkan pada kriteria ini"},{"e":1,"n":6,"s":2.0,"t":"Penetapan sasaran pengamanan harus selaras dengan kebijakan pengamanan, termasuk komitmen untuk mencegah terjadinya ancaman, memenuhi persyaratan perundangan dan perbaikan berkelanjutan.","r":"- - PP-03-05 - PP-03-05-F02 - - - PP-03-05-F02","f":"","k":""},{"e":1,"n":7,"s":2.0,"t":"Terdapat penunjukkan penanggung jawab dalam penetapan dan evaluasi di setiap fungsi yang relevan pada tingkatan organisasi dalam bentuk program pengamanan untuk mencapai sasaran pengamanan.","r":"- PI-03-62","f":"","k":""},{"e":1,"n":8,"s":1.0,"t":"Pelaksanaan program pengamanan harus dipantau, ditinjau, dicatat secara berkala dan terencana terhadap pencapaian sasaran pengamanan.","r":"- - PP-03-05-F02","f":"Belum ada Pemantauan dan Pengukuran Kinerja, Pengamanan dan Laporan secara berkala terhadap pencapaian sasaran pengamanan.","k":""},{"e":1,"n":9,"s":2.0,"t":"Penetapan program pengamanan yang terdokumentasi harus menetapkan target waktu pencapaiannya.","r":"- PP-03-05-F02","f":"","k":""},{"e":1,"n":10,"s":1.0,"t":"Sasaran pengamanan yang ditetapkan organisasi harus dapat dilaksanakan atau organisasi memiliki kemampuan untuk mencapainya.","r":"- 01116 B - ISPS/TDE/31/03/16/002 - 00445/PFSO/DIKSUS/VI/2004 - ISPS/PFSO/23/2/17/039 - PI","f":"- Belum terdapat sarana infrastruktur untuk pengamanan - Belum terdapat monitoring anggaran untuk program Pengamanan","k":""},{"e":1,"n":11,"s":2.0,"t":"Terdapat tindak lanjut hasil rekomendasi penilaian risiko pengamanan dan mitigasi risikonya dalam bentuk dokumen program pengamanan organisasi dalam rangka mencapai tujuan dan sasaran pengamanan yang berisi strategi pengembangan kegiatan pengamanan.","r":"- PP-03-05-F02 - F-21-03-26-SMP - PP-03-26 / PI-03-26-14 - PP-03-05-F02","f":"","k":""},{"e":1,"n":12,"s":2.0,"t":"Terdapat penetapan, penerapan dan pemeliharaan prosedur pengelolaan dan pengendalian dokumen SMP organisasi","r":"- PP-02-12","f":"","k":""},{"e":1,"n":13,"s":2.0,"t":"Terdapat penetapan, penerapan dan pemeliharaan prosedur pengelolaan dan pengendalian catatan kegiatan operasional aspek pengamanan organisasi","r":"- PP-02-12","f":"","k":""},{"e":1,"n":14,"s":1.0,"t":"Terdapat pemastian bahwa dokumen yang digunakan tersedia dalam versi relevan dengan penggunaannya untuk mencegah penggunaan dokumen yang usang","r":"- PP-02-12","f":"Belum ada daftar induk Dokumen","k":"Lampirkan daftar induk Dokumen"},{"e":1,"n":15,"s":2.0,"t":"Terdapat pemastian bahwa setiap dokumen memiliki status yang teridentifikasi (klasifikasi dokumen) termasuk perubahan da revisi terbaru","r":"- PP-02-12","f":"","k":""},{"e":1,"n":16,"s":1.0,"t":"Terdapat pemastian dokumen eksternal yang dibutuhkan telah diidentifikasi dan dikendalikan","r":"- PP-02-12","f":"Belum ada Daftar Induk Dokumen","k":""},{"e":1,"n":17,"s":1.0,"t":"Terdapat catatan prosedur SMP dan pemastian distribusi catatan prosedurnya","r":"- PP-02-12","f":"1. Belum ada Daftar Induk Dokumen 2. Belum ada rekaman riwayat perubahan Dokumen","k":""},{"e":1,"n":1,"s":0.0,"t":"Terdapat penetapan area pengamanan berdasarkan analisis resiko pengamanan yang dibagi menjadi zona sesuai dengan kebutuhan (zona bebas, zona terbatas, zona terlarang)","r":"- PP-05-22","f":"Belum ada dokumen layout zona bebas, terbatas, dan terlarang.","k":""},{"e":1,"n":2,"s":0.0,"t":"Terdapat area pengamanan dalam kawasan obvitnas dan objek tertentu antara lain: a. Lokasi produksi b. Perkantoran c. Pergudangan d. Perparkiran e. Instalasi penting","r":"- PP-05-22","f":"1. Belum ada dokumen layout zona bebas, terbatas, dan terlarang, serta penjelasan rencana pengamanannya. 2. Belum ada dokumen Daily Report laporan harian pengendalian akses. 3 Dokumen Hazard Identification, Risk Assessment & Opportuniy, PT Paiton Operation & Maintenance Indonesia (POMI) File mentah yang belum ada pengesahan dan tanggal berlaku.","k":""},{"e":1,"n":3,"s":0.0,"t":"Terdapat area pengamanan di dalam dan di luar kawasan obvitnas atau objek tertentu, meliputi: a. Batas bangunan dengan pagar terluar atau batas dalam penguasaan pengelola obvitnas atau objek tertentu. b. Pagar terluar batas bangunan dengan pemukiman penduduk dalam lingkup wilayah RT/RW. c. Penggunaan simbol atau tanda batas bagi obvitnas dan obyek tertentu yang tidak memiliki batas bangunan dan pagar terluar","r":"PP-03-05-F02","f":"1. Belum ada dokumen layout zona bebas, terbatas, dan terlarang, serta penjelasan rencana pengamanannya. 2. Belum ada dokumen Daily Report laporan harian pengendalian akses. 3 Dokumen Hazard Identification, Risk Assessment & Opportuniy, PT Paiton Operation & Maintenance Indonesia (POMI) File mentah yang belum ada pengesahan dan tanggal berlaku. 4. Belum ada eviden infrastruktur pengamanan termasuk batas-batas dalam d","k":""},{"e":1,"n":4,"s":1.0,"t":"Lingkungan sekitar di luar kawasan obvitnas dan objek tertentu berupa: pemukiman penduduk dan/atau objek lain dalam lingkup wilayah desa/kelurahan atau kecamatan/kabupaten atau lintas provinsi.","r":"","f":"1. Belum ada dokumen layout zona bebas, terbatas, dan terlarang, serta penjelasan rencana pengamanannya. 2. Belum ada dokumen Daily Report laporan harian pengendalian akses. 3 Dokumen Hazard Identification, Risk Assessment & Opportuniy, PT Paiton Operation & Maintenance Indonesia (POMI) File mentah yang belum ada pengesahan dan tanggal berlaku.","k":""},{"e":1,"n":1,"s":1.0,"t":"Penetapan mekanisme Komando dan Pengendalian (Kodal) dalam kondisi normal berada pada pengelola Obvitnas atau Objek Tertentu.","r":"PP-03-05-F02","f":"- Belum ada eviden mekanisme pengamanan dalam kondisi normal, bisa melampirkan RENGGIAT","k":"Segera lakukan perbaikan untuk lampiran kegiatan, jadwal dll ditandatangani"},{"e":1,"n":2,"s":0.0,"t":"Terdapat analisis keadaan darurat yang dibuat oleh pengelola obvitnas dan/atau objek tertentu.","r":"PP-03-22","f":"dokumen sudah expired","k":"segera lakukan perbaruan"},{"e":1,"n":3,"s":2.0,"t":"Penetapan mekanisme kodal dalam kondisi kontingensi berada pada Polri dan/atau dapat meminta bantuan TNI.","r":"PP-03-05-F02 BAB III PELAKSANAAN POINT 5 CARA BERTINDAK HURUF C","f":"","k":""},{"e":1,"n":4,"s":2.0,"t":"Terdapat kegiatan simulasi tanggap darurat dalam kondisi kontingensi terhadap mekanisme kodal yang telah ditetapkan oleh pengelola obvitnas dan/atau objek tertentu.","r":"PP-03-26 / P1-03-26-14","f":"","k":""},{"e":1,"n":5,"s":0.0,"t":"Terdapat kegiatan pengukuran efektivitas kinerja mekanisme kodal baik dalam kondisi normal maupun kontingensi.","r":"","f":"","k":""},{"e":1,"n":6,"s":1.0,"t":"Terdapat kegiatan partisipasi, konsultasi dan komunikasi dalam mekanisme kodal dengan pihak internal (seluruh tingkatan dan fungsi yang ada) dan eksternal dalam rangka penerapan SMP.","r":"- PP 03-26 '- Fm-SMP-GITETPAITON-003","f":"Kegiatan partisipasi, konsultasi dan kounikasi dalam mekanisme kodal hanya dengan pihak eksternal. Untuk seluruh tingkatan dan fungsi yang ada di pihak internal belum ada","k":"Melaksanakan kegiatan partisipasi, konsultasi, dan komunikasi dalam mekanisme kodal dengan pihak internal (seluruh tingkatan dan fungsi yang ada)"},{"e":1,"n":7,"s":2.0,"t":"Terdapat penetapan personel di setiap fungsi yang relevan di organisasi yang bertanggung jawab melaksanakan penanganan dan pemulihan keadaan darurat kemananan.","r":"","f":"","k":""},{"e":2,"n":1,"s":2.0,"t":"Terdapat penunjukan perwakilan manajemen dan perangkatnya oleh pimpinan puncak untuk menerapkan SMP.","r":"B/N 0059","f":"","k":""},{"e":2,"n":2,"s":1.0,"t":"Terdapat penetapan struktur organisasi pengamanan yang didokumentasikan dengan personel pengamanan yang cukup.","r":"","f":"Dokumen perlu disahkan terlebih dahulu","k":"Mengesahkan dokumen Struktur Organisasi"},{"e":2,"n":3,"s":1.0,"t":"Penetapan, pendokumentasian dan pengkomunikasian tanggung jawab dan wewenang dari seluruh personel pengamanan.","r":"PI-03-26-03 PR146164","f":"Belum ada bukti sosialisasi ke personel pengamanan","k":"Lakukan pengkomunikasian tanggung jawab dan wewenang dari seluruh personel pengamanan."},{"e":2,"n":4,"s":1.0,"t":"Terdapat Sarana prasarana yang terinventarisasi dalam menunjang penerapan SMP (pagar, pintu gerbang, penerangan (lighting), pintu darurat, pos keamanan, pos jaga, P3K, sistem alarm, metal detector, CCTV, alat komunikasi, command centre, dll).","r":"","f":"Perlu ditambahkan lampiran daftar inventarisasi dari sarana prasarana dan checklist peralatan","k":"Menambahkan lampiran daftar inventarisasi dan checklist dari sarana prasarana"},{"e":2,"n":5,"s":1.0,"t":"Terdapat daftar rekapitulasi dan dokumen ketentuan peraturan perundang-undangan di bidang keamanan yang tetap terpelihara dan terjaga dengan baik serta termutakhir (pengaturan turjawali, pemeriksaan terhadap badan, barang dan kendaraan yang keluar masuk, penanganan aksi unjuk rasa, penanganan ancaman/teror bom, penanganan bencana alam, dll)","r":"","f":"Master dokumen perlu dilakukan pengesahan","k":"Master dokumen harus disahkan oleh Manager Representatif"},{"e":2,"n":6,"s":0.0,"t":"Terdapat bukti/catatan evaluasi secara periodik terhadap prosedur/intruksi kerja pengendalian operasional pengamanan untuk menilai kecukupan dan efektivitasnya.","r":"PP-03-05-F02 PI-03-26-03","f":"Belum ada review / evaluasi terhadap sop dan IK pengamanan","k":"Lengkapi Dokumen review atau evaluasi terhadap sop dan ik pengamanan"},{"e":2,"n":7,"s":1.0,"t":"Terdapat prosedur penetapan klasifikasi dokumen/informasi organisasi sesuai tingkat kerahasiaannya yang terdokumentasi.","r":"PP-02-12","f":"Belum dilakukan pengesahan yang relevan","k":"Dokumen perlu disahkan (Nama, Jabatan, TTD)"},{"e":2,"n":8,"s":1.0,"t":"Terdapat prosedur yang terdokumentasi untuk mengindentifikasi, menyusun dan memelihara ketentuan peraturan perundang-undangan di bidang keamanan yang terdapat dalam organisasi.","r":"PP-03-06","f":"Belum dilakukan pengesahan yang relevan","k":"Dokumen perlu disahkan (Nama, Jabatan, TTD)"},{"e":2,"n":9,"s":2.0,"t":"Terdapat bukti kegiatan sosialisasi tentang ketentuan peraturan perundang-undangan di bidang keamanan dan peraturan lainnya yang relevan.","r":"","f":"","k":""},{"e":2,"n":10,"s":1.0,"t":"Terdapat prosedur tentang mitigasi manajemen risiko pengamanan untuk setiap fungsi di organisasi yang berkaitan dengan kegiatan pengamanan.","r":"PI-03-05-02","f":"","k":""},{"e":2,"n":11,"s":2.0,"t":"Terdapat prosedur tentang penyusunan manajemen risiko dan prosedur manajemen risiko pengamanan yang menjadi acuan dalam pelaksanaan pengamanan.","r":"PP-03-05 PI-03-05-02","f":"","k":""},{"e":2,"n":12,"s":0.0,"t":"Terdapat prosedur tentang koordinasi dengan instansi terkait dalam penanganan keadaan darurat pada situasi kontingensi.","r":"","f":"SOP yang ada tidak mengenai penanganan keadaan darurat","k":"Menunjukkan Eviden SOP yang relevan"},{"e":2,"n":13,"s":0.0,"t":"Terdapat prosedur penanganan ancaman terorisme","r":"","f":"Tidak terdapat prosedur untuk penanganan ancaman terorisme","k":"Menunjukkan prosedur untuk penanganan ancaman terorisme"},{"e":2,"n":14,"s":1.0,"t":"Terdapat prosedur penanganan keamanan dan system informasi","r":"PP-02-02 PP-02-03 PP-02-04 PP-02-05 PP-02-06 PP-02-07 PP-02-08 PP-02-09 PP-02-10 PP-02-11 ","f":"Masing masing prosedur belum ada pengesahan","k":"Prosedur harus ada pengesehan (Nama, Jabatan, TTD)"},{"e":2,"n":15,"s":1.0,"t":"Terdapat prosedur penetapan level keamanan sesuai identifikasi tingkat ancaman (aman, rawan, kontigensi)","r":"PI-03-26-14 DI/02/PFSP/-PE/IV-2013","f":"","k":"Prosedur harus ada pengesehan (Nama, Jabatan, TTD)"},{"e":2,"n":1,"s":1.0,"t":"Terdapat penetapan area pengamanan dalam kawasan obvitnas dan objek tertentu.","r":"No PP-05-22","f":"penetapan area pengamanan ada di laporan bulanan, namun tidak ada tanda tangan pengesahan","k":"Laporan bulanan harus ada pengesahan"},{"e":2,"n":2,"s":1.0,"t":"Penataan tata ruang area pengamanan sesuai dengan poin 1 ditetapkan dengan klasifikasi zona 1 (warna merah) oleh pengelola sesuai potensi ancaman dan karakteristik area.","r":"No PP-05-22","f":"Penetapan area pengamanan belum ada pengesahan (Nama, Jabatan, TTD)","k":"Buat pengesahan penetapan tata ruang pengamanan"},{"e":2,"n":3,"s":1.0,"t":"Terdapat penetapan area pengamanan di dalam dan di luar kawasan obvitnas atau objek tertentu, meliputi: a. Batas bangunan dengan pagar terluar atau batas dalam penguasaan pengelola obvitnas atau objek tertentu. b. Pagar terluar batas bangunan dengan pemukiman penduduk dalam lingkup wilayah RT/RW. c. Penggunaan simbol atau tanda batas bagi obvitnas dan objek tertentu yang tidak memiliki batas bangunan dan pagar terluar.","r":"","f":"- di peta demografis tidak ada petunjuk arah mata angin - Laporan kegiatan belum ada pengesahan","k":"- Tambahkan arah mata angin di peta demografis - Tambahkan pengesahan di laporan"},{"e":2,"n":4,"s":1.0,"t":"Penataan area pengamanan sesuai dengan poin 3 ditetapkan dengan klasifikasi zona 2 (warna kuning) oleh pengelola sesuai potensi ancaman dan karakteristik area.","r":"","f":"Penetapan area pengamanan belum ada pengesahan (Nama, Jabatan, TTD)","k":"Buat pengesahan penetapan tata ruang pengamanan"},{"e":2,"n":5,"s":2.0,"t":"Lingkungan sekitar di luar kawasan obvitnas dan objek tertentu berupa: pemukiman penduduk dan/atau objek lain dalam lingkup wilayah desa/kelurahan atau kecamatan/kabupaten atau lintas provinsi.","r":"E_PP-03-26-A01","f":"","k":""},{"e":2,"n":6,"s":1.0,"t":"Penataan area pengamanan sesuai dengan poin 5 ditetapkan dengan klasifikasi zona 3 (warna hijau) oleh pengelola sesuai potensi ancaman dan karakteristik area.","r":"","f":"Penetapan area pengamanan belum ada pengesahan (Nama, Jabatan, TTD)","k":"Buat pengesahan penetapan tata ruang pengamanan"},{"e":2,"n":7,"s":2.0,"t":"Terdapat pengklasifikasian area pengamanan dalam bentuk pembatas (barrier) secara fisik atau simbol.","r":"","f":"","k":""},{"e":2,"n":8,"s":2.0,"t":"Terdapat bukti penetapan dan pengendalian klasifikasi area pengamanan sesuai dengan hasil penilaian resiko pengamanan.","r":"","f":"","k":"Prosedur harus ada pengesehan (Nama, Jabatan, TTD)"},{"e":2,"n":9,"s":2.0,"t":"Terdapat pembinaan dan pengawasan terhadap area pengamanan.","r":"","f":"","k":""},{"e":2,"n":1,"s":2.0,"t":"Terdapat bukti terdokumentasi berupa dokumen rencana pengamanan kontingensi dan rencana pengamanan kegiatan masing-masing fungsi/departemen/bagian tentang penyelenggaraan manajemen pengamanan secara ringkas dan jelas terhadap potensi ancaman, sasaran, sumber daya dukung dan strategi pencapaiannya (konsep pengamanan, target pengamanan, dan cara bertindak) selama periode atau waktu tertentu.","r":"PP-03-05-F02","f":"","k":""},{"e":2,"n":2,"s":2.0,"t":"Terdapat perencanaan pengamanan kontingensi, berisi kebijakan dan kewenangan secara tertulis tentang keadaan darurat (kontingensi) serta perintah untuk menutup atau menghentikan operasional perusahaan, baik secara keseluruhan maupun sebagian.","r":"PP-03-05-F03","f":"","k":""},{"e":2,"n":3,"s":1.0,"t":"Terdapat penyelenggaraan manajemen keamanan pada masing-masing fungsi/departemen/bagian sesuai dengan dokumen rencana pengamanannya.","r":"PP-03-05-F02","f":"ARP belum dijabarkan per bagian/departemen","k":"Buat dan jabarkan ARP sesuai dengan fungsi/bagian/departemen"},{"e":2,"n":4,"s":2.0,"t":"Terdapat evaluasi penyelenggaraan manajemen keamanan masing-masing fungsi/departemen/bagian secara berkala paling sedikit 2 kali dalam setahun.","r":"PP-03-05-F02","f":"","k":""},{"e":2,"n":1,"s":2.0,"t":"Terdapat catatan yang terdokumentasi tentang jumlah personel pengamanan sesuai dengan kebutuhan yang didasarkan pada pertimbangan: a. identifikasi luas menyangkut jumlah area obvitnas dan objek tertentu yang diamankan. b. tingkat ancaman dan risiko terhadap kelangsungan obvitnas dan objek tertentu.","r":"PP-03-05-F02","f":"","k":""},{"e":2,"n":2,"s":2.0,"t":"Terdapat kekuatan jumlah personel pengamanan internal yang cukup terdiri atas beberapa regu yang dibagi dalam shift dengan pola 3 shift 2 bagian dalam waktu 8 jam atau 2 shift 2 bagian dalam waktu 12 jam","r":"PP-03-05-F02","f":"","k":""},{"e":2,"n":3,"s":2.0,"t":"Terdapat kekuatan jumlah personel pengamanan oleh Polri yang disesuaikan dengan kontrak kerjasama.","r":"PP-03-05-F02","f":"","k":""},{"e":3,"n":1,"s":2.0,"t":"Terdapat pembinaan teknis terhadap kemampuan personel pengamanan internal yang dilakukan baik oleh pengelola Obvitnas atau objek tertentu maupun oleh Polri","r":"INTERNAL Security Supervisor a/n Nasiruddin: *) Ijasah Gada Utama No. IJ/1853/IX/2019 *) K","f":"Prosedur dan bukti implementasi ada, baik dari internal Perusahaan maupun dari BUJP Catatan: KTA Satpam a/n Nasiruddin akan kadalularsa tahun ini","k":""},{"e":3,"n":2,"s":1.0,"t":"Terdapat program pelatihan kemampuan anggota pengamanan internal yang dilaksanakan oleh Polri, pengguna jasa pengamanan atau BUJP dalam bentuk: a. pelatihan dasar dengan kualifikasi Gada Pratama, b. pelatihan menengah dengan kualifikasi Gada Madya, c. pelatihan manajerial dengan kualifikasi Gada Utama, dan d. kursus spesialisasi.","r":"INTERNAL *) Procedures Manual; No. PP-03-07 rev.5 *) Procedures Manual; No. PP-08-06 rev.1","f":"Di dokumen untuk 4. A. 1 menunjukkan ijasah Gada Utama yang masih aktif Salah satu laporan yang dserahkan belum ditandatangani","k":"Menyertakan LAPORAN HASIL PELAKSANAAN TRAINING DAN DRILL IMO Course 3.24 & 3.25 tertanggal 16 April 2019 yang telah ditandatangani"},{"e":3,"n":3,"s":1.0,"t":"Terdapat catatan hasil analisis dan evaluasi efektivitas pelaksanaan program pelatihan dan/atau efektivitas hasil pelatihan terkait aspek kompetensi pengamanan.","r":"INTERNAL *) LAPORAN HASIL PELAKSANAAN EXERCISE TRAINING DAN DRILL IMO Course 3.24 & 3.25 t","f":"LAPORAN HASIL PELAKSANAAN TRAINING DAN DRILL IMO Course 3.24 & 3.25 tertanggal 16 April 2019 belum ditandatangani","k":"Menyertakan LAPORAN HASIL PELAKSANAAN TRAINING DAN DRILL IMO Course 3.24 & 3.25 tertanggal 16 April 2019 yang telah ditandatangani"},{"e":3,"n":4,"s":1.0,"t":"Terdapat personel pengamanan internal sesuai dengan ketentuan peraturan perundang-undangan.","r":"INTERNAL *) Procedures Manual; No. PP-03-26 rev.8 Head Security a/n Andri Irawan: *) Kartu","f":"KTA a/n Andri Irawan kadaluarsa di tahun 2017","k":"Perlu meperbaharui KTA a/n Andri Irawan"},{"e":3,"n":5,"s":1.0,"t":"Terdapat prosedur tentang pengelolaan pelatihan personel pengamanan internal terkait aspek kompetensi pengamanan.","r":"*) Procedures Manual; No. PP-03-07 rev.5 *) Procedures Manual; No. PP-08-06 rev.1","f":"Prosedur yang disediakan tidak menyebutkan pelatihan spesifik untuk aspek kompetensi pengamanan Implementasi dalam Training Matrix menyebutkan beberapa aspek training Security, seperti Security Management System","k":"Menambahkan pelatihan spesifik untuk aspek kompetensi pengamanan dalam prosedur"},{"e":3,"n":6,"s":0.0,"t":"Terdapat catatan hasil identifikasi dan proses analisis kebutuhan pelatihan kompetensi pengamanan yang sesuai dengan risiko pengamanan dan sistem manajemen pengamanan.","r":"","f":"belum ada catatan hasil identifikasi dan proses analisis kebutuhan pelatihan kompetensi pengamanan","k":""},{"e":3,"n":7,"s":0.0,"t":"Terdapat prosedur tentang membangun kesadaran pengamanan terhadap setiap personel atau karyawan atau mitra kerja pada perusahaan yang dapat mempengaruhi kinerja pengamanan.","r":"*) Procedures Manual; No. PP-03-07 rev.5","f":"Prosedur yang disediakan bukan tentang membangun kesadaran pengamanan kepada pekerja atau mitra kerja pada perusahaan yang dapat mempengaruhi kinerja pengamanan","k":""},{"e":3,"n":1,"s":1.0,"t":"Terdapat kualifikasi anggota Polri dalam pelaksanaan pengamanan berupa kemampuan tugas polisi umum.","r":"","f":"tidak ada referensi, kemungkinan besar tidak menggunakan jasa Polri","k":""},{"e":3,"n":2,"s":1.0,"t":"Terdapat kemampuan fisik anggota Polri yang sehat jasmani dan rohani.","r":"","f":"tidak ada referensi, kemungkinan besar tidak menggunakan jasa Polri","k":""},{"e":3,"n":3,"s":1.0,"t":"Terdapat rekam jejak perilaku anggota Polri yang baik untuk ditugaskan dalam pengamanan.","r":"","f":"tidak ada referensi, kemungkinan besar tidak menggunakan jasa Polri","k":""},{"e":4,"n":1,"s":0.0,"t":"Terdapat prosedur dan mekanisme pemantauan dan pengukuran yang berkaitan dengan kinerja pengamanan baik pengukuran secara kualitatif maupun kuantitatif sesuai kebutuhan organisasi, efektivitas pengendalian pengamanan, dan evaluasi pematuhan peraturan perundangan aspek keamanan.","r":"*) Procedures Manual; No. PP-03-61 rev.11 *) Procedures Manual; No. PP-03-64 rev.6","f":"Dokumen yang disediakan menuliskan rujukan ke Perkap 24/2007 mengenai System Manajemen Pengamanan, tapi dalam prosedur tidak ada konten yang terkait kinerja pengamanan","k":"tambahkan konten yang terkait kinerja pengamanan dalam prosedur"},{"e":4,"n":2,"s":1.0,"t":"Organisasi harus mengidentifikasi parameter kinerja dari pengamanan secara menyeluruh untuk organisasi terkait kebijakan dan sasaran, program pengamanan, umpan balik dari kelemahan sistem, dan kegiatan pelatihan atau kegiatan membangun kesadaran pengamanan.","r":"*) Procedures Manual; No. PP-03-61 rev.11 *) Procedures Manual; No. PP-03-64 rev.6","f":"Telah dilakukan Audit untuk SMP, namu bebeapa referensi dokumen yg sudah diperbaharui tidak disertakan untuk memverifikasi apakah perubahannya sudah sesuai dengan audit item ini","k":"Menyertakan dokumen yang telah diperbaharui untuk diperiksa kesesuaiannya dengan kriteria audit item ini"},{"e":4,"n":3,"s":1.0,"t":"Terdapat catatan hasil pemantauan pelaksanaan perencanaan dan program SMP yang telah ditetapkan.","r":"*) Procedures Manual; No. PP-03-61 rev.11 *) Procedures Manual; No. PP-03-64 rev.6 *) Lapo","f":"Telah dilakukan Audit untuk SMP, namu bebeapa referensi dokumen yg sudah diperbaharui tidak disertakan untuk memverifikasi apakah perubahannya sudah sesuai dengan audit item ini","k":"Menyertakan dokumen yang telah diperbaharui untuk diperiksa kesesuaiannya dengan kriteria audit item ini"},{"e":4,"n":4,"s":2.0,"t":"Terdapat prosedur pemeliharaan dan kalibrasi yang terdokumentasi untuk peralatan yang dipersyaratkan untuk kegiatan pemantauan dan pengukuran.","r":"*) Procedures Manual; No. PI-03-26-10 rev.3","f":"sesuai ekspektasi","k":""},{"e":4,"n":5,"s":2.0,"t":"Terdapat catatan hasil pelaksanaan pemeliharaan dan kalibrasi peralatan untuk kegiatan pemantauan dan pengukuran yang dipersyaratkan.","r":"","f":"sesuai ekspektasi","k":""},{"e":4,"n":6,"s":0.0,"t":"Terdapat catatan hasil pemantauan dan pengukuran ketidaksesuaian serta tindak lanjutnya.","r":"","f":"Tidak disediakan bukti dokumen hasil pemantauan dan pengukuran","k":"Menyertakan bukti dokumen hasil pemantauan dan pengukuran"},{"e":4,"n":7,"s":1.0,"t":"Terdapat prosedur yang terdokumentasi mengenai pelaporan internal terkait semua hasil pelaksanaan pemantauan dan pengukuran, audit dan tinjauan ulang SMP.","r":"*) Procedures Manual; No. PP-03-61 rev.11","f":"Prosedur yang disediakan bukan mengenai pelaporan internal terkait semua hasil pelaksanaan pemantauan dan pengukuran, audit dan tinjauan ulang SMP. Implentasi ada dari hasil follow up terhadap audit SMP","k":"Mengupdate prosedur untuk menambah konten mengenai pelaporan internal terkait semua hasil pelaksanaan pemantauan dan pengukuran, audit dan tinjauan ulang SMP."},{"e":4,"n":8,"s":0.0,"t":"Terdapat prosedur yang terdokumentasi mengenai pelaporan eksternal yang dipersyaratkan terkait aspek keamanan","r":"*) Procedures Manual; No. PP-03-61 rev.11","f":"Prosedur yang disediakan bukan tentang pelaporan eksternal terkait aspek keamanan, lebih ke audit yang dilakukan pihak external Auditor","k":"Mengupdate prosedur untuk menambah konten mengenai pelaporan eksternal terkait aspek keamanan"},{"e":4,"n":9,"s":2.0,"t":"Terdapat catatan bukti pelaporan internal dan eksternal pelaksanaan SMP organisasi.","r":"*) Analisa Informasi dan Data Evaluasi Pelaksanaan Rencana Pengamanan PP-03-05-F02 Tahun 2","f":"sesuai ekspektasi","k":""},{"e":4,"n":10,"s":2.0,"t":"Terdapat prosedur yang terdokumentasi tentang penanganan ketidaksesuaian, tindakan perbaikan dan pencegahannya.","r":"*) Procedures Manual; No. PP-03-61 rev.11","f":"Prosedur ada, File Audit finding dan closeout action tahun 2017-2019 dari 5. 6. bisa digunakan untuk bukti implementasi","k":""}]};
+</script>
+<script>
+/* ===== SMP Command Center — logika tampilan ===== */
+(function () {
+  var D = window.SMPC;
+  if (!D || !document.getElementById('smpcRoot')) return;
+
+  var $ = function (id) { return document.getElementById(id); };
+  function esc(s) {
+    return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c];
+    });
+  }
+  var SCORE_LABEL = { 2: 'Sesuai', 1: 'Sebagian', 0: 'Belum' };
+
+  /* ---------- hitung ---------- */
+  var els = D.elems.map(function (e, i) {
+    var rows = D.kriteria.filter(function (k) { return k.e === i; });
+    var dinilai = rows.filter(function (k) { return k.s != null; });
+    var nilai = dinilai.reduce(function (a, k) { return a + (k.s / 2) * e.w / rows.length; }, 0);
+    return {
+      i: i, nama: e.n, short: e.s, w: e.w, c: e.c, fase: e.f, desc: e.d,
+      n: rows.length, dinilai: dinilai.length, nilai: nilai,
+      pct: e.w ? (nilai / e.w) * 100 : 0,
+      s2: rows.filter(function (k) { return k.s === 2; }).length,
+      s1: rows.filter(function (k) { return k.s === 1; }).length,
+      s0: rows.filter(function (k) { return k.s === 0; }).length
+    };
+  });
+  var totalNilai = els.reduce(function (a, e) { return a + e.nilai; }, 0);
+  var pct = totalNilai * 100;
+  var nTemuan = D.kriteria.filter(function (k) { return k.f; }).length;
+  var nRekom = D.kriteria.filter(function (k) { return k.k; }).length;
+  var nMayor = D.kriteria.filter(function (k) { return k.s === 0; }).length;
+  var nSesuai = D.kriteria.filter(function (k) { return k.s === 2; }).length;
+  var nSebagian = D.kriteria.filter(function (k) { return k.s === 1; }).length;
+
+  function verdict(p) {
+    if (p >= 86) return ['EMAS', '#fbbf24'];
+    if (p >= 71) return ['PERAK', '#cbd5e1'];
+    if (p >= 56) return ['PERUNGGU', '#d97706'];
+    return ['PEMBINAAN', '#f43f5e'];
+  }
+  var vd = verdict(pct);
+
+  /* ---------- render: header & KPI ---------- */
+  function renderHead() {
+    $('smpcScore').textContent = pct.toFixed(2).replace('.', ',') + '%';
+    $('smpcVerdict').textContent = vd[0] + ' · ' + D.periode.split(' ').pop();
+    $('smpcSub').textContent = 'Audit internal · ' + D.periode + ' · ' + D.kriteria.length + ' kriteria';
+    $('smpcCap').innerHTML = 'Predikat <b>' + vd[0] + '</b> · ambang Emas 86%<br>' +
+      'Gap ke Emas <b>' + Math.max(0, 86 - pct).toFixed(2).replace('.', ',') + ' poin</b>';
+
+    var kpi = [
+      ['Skor akhir', pct.toFixed(2).replace('.', ',') + '%', 'dari 118 kriteria berbobot'],
+      ['Kriteria', String(D.kriteria.length), '5 elemen · 18/49/31/10/10'],
+      ['Temuan', String(nTemuan), 'catatan auditor di lapangan'],
+      ['NC Mayor', String(nMayor), 'skor 0 — tanpa bukti/penerapan']
+    ];
+    $('smpcKpi').innerHTML = kpi.map(function (k) {
+      return '<div><div class="k">' + k[0] + '</div><div class="v">' + k[1] +
+        '</div><div class="s">' + k[2] + '</div></div>';
+    }).join('');
+
+    $('cntTemuan').textContent = nTemuan;
+    $('cntRekom').textContent = nRekom;
+    $('cntKriteria').textContent = D.kriteria.length;
+  }
+
+  /* ---------- render: elemen ---------- */
+  function renderElems() {
+    $('smpcElems').innerHTML = els.map(function (e) {
+      return '<div class="smpc-el">' +
+        '<div class="nm"><i style="background:' + e.c + '"></i><span>' + esc(e.short) +
+        ' <em>bobot ' + Math.round(e.w * 100) + '%</em></span></div>' +
+        '<div class="track"><div class="fill" data-w="' + e.pct.toFixed(1) +
+        '" style="background:' + e.c + ';color:' + e.c + '"></div></div>' +
+        '<div class="pc" style="color:' + e.c + '">' + e.pct.toFixed(1).replace('.', ',') + '%' +
+        '<small>' + e.nilai.toFixed(2).replace('.', ',') + '/' + e.w.toFixed(2).replace('.', ',') + '</small></div>' +
+        '</div>';
+    }).join('');
+    setTimeout(function () {
+      [].forEach.call(document.querySelectorAll('#smpcElems .fill'), function (f) {
+        f.style.width = f.getAttribute('data-w') + '%';
+      });
+    }, 120);
+  }
+
+  function animateRing() {
+    var C = 2 * Math.PI * 82;
+    var ring = $('smpcRing');
+    ring.setAttribute('stroke-dasharray', C.toFixed(2));
+    ring.setAttribute('stroke-dashoffset', C.toFixed(2));
+    setTimeout(function () {
+      ring.setAttribute('stroke-dashoffset', (C * (1 - pct / 100)).toFixed(2));
+    }, 150);
+    var t0 = null;
+    function step(ts) {
+      if (!t0) t0 = ts;
+      var p = Math.min(1, (ts - t0) / 1400);
+      var val = (pct * (1 - Math.pow(1 - p, 3)));
+      $('smpcRingVal').textContent = val.toFixed(1).replace('.', ',') + '%';
+      if (p < 1) requestAnimationFrame(step);
+      else $('smpcRingVal').textContent = pct.toFixed(1).replace('.', ',') + '%';
+    }
+    if (!window.matchMedia || !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      requestAnimationFrame(step);
+    } else {
+      $('smpcRingVal').textContent = pct.toFixed(1).replace('.', ',') + '%';
+    }
+  }
+
+  /* ---------- pane: ringkasan ---------- */
+  function renderRingkasan() {
+    var heat = D.kriteria.map(function (k, idx) {
+      return '<div class="smpc-cell s' + k.s + '" data-i="' + idx + '" role="button" tabindex="0" ' +
+        'title="' + esc(els[k.e].short + ' · butir ' + k.n + ' — ' + SCORE_LABEL[k.s]) + '"></div>';
+    }).join('');
+
+    var cards = els.map(function (e) {
+      return '<div class="smpc-card">' +
+        '<div class="t" style="color:' + e.c + '"><i style="background:' + e.c + '"></i>' + esc(e.short) + '</div>' +
+        '<div class="big">' + e.pct.toFixed(1).replace('.', ',') + '%</div>' +
+        '<div class="lbl">bobot ' + Math.round(e.w * 100) + '% · ' + e.n + ' kriteria</div>' +
+        '<div class="desc">' + e.s2 + ' sesuai · ' + e.s1 + ' sebagian · ' + e.s0 + ' belum</div>' +
+        '</div>';
+    }).join('');
+
+    $('pane-ringkasan').innerHTML =
+      '<div class="smpc-grid smpc-g5">' + cards + '</div>' +
+      '<div style="margin-top:16px">' +
+      '<div class="smpc-h4">Peta ' + D.kriteria.length + ' kriteria</div>' +
+      '<div class="smpc-heat" id="smpcHeat">' + heat + '</div>' +
+      '<div style="display:flex;gap:14px;flex-wrap:wrap;margin-top:10px;font-size:10.5px;color:#8fa1bf">' +
+      '<span><i style="display:inline-block;width:9px;height:9px;border-radius:2px;background:rgba(52,211,153,.85);margin-right:5px"></i>Sesuai (' + nSesuai + ')</span>' +
+      '<span><i style="display:inline-block;width:9px;height:9px;border-radius:2px;background:rgba(245,158,11,.8);margin-right:5px"></i>Sebagian (' + nSebagian + ')</span>' +
+      '<span><i style="display:inline-block;width:9px;height:9px;border-radius:2px;background:rgba(244,63,94,.85);margin-right:5px"></i>Belum (' + nMayor + ')</span>' +
+      '<span style="margin-left:auto">Klik kotak untuk membuka butirnya</span></div>' +
+      '</div>' +
+      '<div class="smpc-note"><b>Sumber data:</b> kertas kerja audit SMP ' + esc(D.unit) + ' (' + esc(D.lokasi) +
+      '), periode ' + esc(D.periode) + ', standar ' + esc(D.standar) + '. Skor dihitung ulang dari ' +
+      D.kriteria.length + ' kriteria dengan bobot elemen 15/25/30/20/10 — hasilnya <b>' +
+      pct.toFixed(2).replace('.', ',') + '%</b>. File kerja mencantumkan 58,85% karena subtotal Pola Pengamanan melewatkan 2 baris.</div>';
+
+    var heatBox = $('smpcHeat');
+    if (heatBox) {
+      heatBox.addEventListener('click', function (ev) {
+        var cell = ev.target.closest('.smpc-cell');
+        if (cell) openKriteria(parseInt(cell.getAttribute('data-i'), 10));
+      });
+      heatBox.addEventListener('keydown', function (ev) {
+        if (ev.key === 'Enter' || ev.key === ' ') {
+          var cell = ev.target.closest('.smpc-cell');
+          if (cell) { ev.preventDefault(); openKriteria(parseInt(cell.getAttribute('data-i'), 10)); }
+        }
+      });
+    }
+  }
+
+  /* ---------- pane: kriteria ---------- */
+  var fScore = 'all', fElem = 'all', fQuery = '';
+
+  function renderKriteria() {
+    $('pane-kriteria').innerHTML =
+      '<div class="smpc-bar">' +
+      '<label class="smpc-search"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#8fa1bf" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>' +
+      '<input id="smpcQ" type="search" placeholder="Cari kriteria, temuan, atau rekomendasi…" aria-label="Cari kriteria"></label>' +
+      '<select class="smpc-sel" id="smpcElemSel" aria-label="Filter elemen">' +
+      '<option value="all">Semua elemen</option>' +
+      els.map(function (e) { return '<option value="' + e.i + '">' + esc(e.short) + '</option>'; }).join('') +
+      '</select>' +
+      '</div>' +
+      '<div class="smpc-bar" id="smpcChips">' +
+      '<button type="button" class="smpc-chip on" data-s="all">Semua ' + D.kriteria.length + '</button>' +
+      '<button type="button" class="smpc-chip" data-s="2">Sesuai ' + nSesuai + '</button>' +
+      '<button type="button" class="smpc-chip" data-s="1">Sebagian ' + nSebagian + '</button>' +
+      '<button type="button" class="smpc-chip" data-s="0">Belum ' + nMayor + '</button>' +
+      '</div>' +
+      '<div class="smpc-list" id="smpcList"></div>';
+
+    var q = $('smpcQ'), sel = $('smpcElemSel');
+    $('smpcList').addEventListener('click', function (ev) {
+      var it = ev.target.closest('.smpc-item');
+      if (it) it.classList.toggle('open');
+    });
+    q.addEventListener('input', function () { fQuery = q.value.toLowerCase().trim(); paintList(); });
+    sel.addEventListener('change', function () { fElem = sel.value; paintList(); });
+    $('smpcChips').addEventListener('click', function (ev) {
+      var b = ev.target.closest('.smpc-chip');
+      if (!b) return;
+      fScore = b.getAttribute('data-s');
+      [].forEach.call($('smpcChips').children, function (c) { c.classList.toggle('on', c === b); });
+      paintList();
+    });
+    paintList();
+  }
+
+  function filtered() {
+    return D.kriteria.map(function (k, i) { return { k: k, i: i }; }).filter(function (o) {
+      var k = o.k;
+      if (fScore !== 'all' && String(k.s) !== fScore) return false;
+      if (fElem !== 'all' && String(k.e) !== fElem) return false;
+      if (fQuery) {
+        var hay = (k.t + ' ' + k.f + ' ' + k.k + ' ' + k.r).toLowerCase();
+        if (hay.indexOf(fQuery) === -1) return false;
+      }
+      return true;
+    });
+  }
+
+  function paintList() {
+    var box = $('smpcList');
+    if (!box) return;
+    var rows = filtered();
+    if (!rows.length) {
+      box.innerHTML = '<div class="smpc-empty">Tidak ada kriteria yang cocok dengan filter ini.</div>';
+      return;
+    }
+    box.innerHTML = rows.map(function (o) {
+      var k = o.k, e = els[k.e];
+      return '<div class="smpc-item" data-i="' + o.i + '">' +
+        '<div class="smpc-row">' +
+        '<div class="no">' + (e.i + 1) + '.' + k.n + '</div>' +
+        '<div class="tx">' + esc(k.t) + '</div>' +
+        '<div class="smpc-pill s' + k.s + '">' + SCORE_LABEL[k.s] + '</div>' +
+        '<div class="ar">&#9654;</div>' +
+        '</div>' +
+        '<div class="smpc-det">' +
+        '<span class="k">Elemen</span><div class="v">' + esc(e.nama) + ' · bobot ' + Math.round(e.w * 100) + '%</div>' +
+        (k.r ? '<span class="k">Referensi</span><div class="v">' + k.r.split(/\s{2,}|,(?=\s?[A-Z]{2,})/).slice(0, 6).map(function (r) {
+          return '<span class="smpc-ref">' + esc(r.trim()) + '</span>';
+        }).join('') + '</div>' : '') +
+        (k.f ? '<span class="k">Temuan auditor</span><div class="v bad">' + esc(k.f) + '</div>' : '<span class="k">Temuan auditor</span><div class="v good">Tidak ada temuan — bukti dan penerapan terpenuhi.</div>') +
+        (k.k ? '<span class="k">Rekomendasi</span><div class="v">' + esc(k.k) + '</div>' : '') +
+        '</div></div>';
+    }).join('');
+  }
+
+  function openKriteria(idx) {
+    var k = D.kriteria[idx];
+    fElem = String(k.e); fScore = 'all'; fQuery = '';
+    switchTab('kriteria');
+    var sel = $('smpcElemSel'), q = $('smpcQ');
+    if (sel) sel.value = fElem;
+    if (q) q.value = '';
+    [].forEach.call($('smpcChips').children, function (c) {
+      c.classList.toggle('on', c.getAttribute('data-s') === 'all');
+    });
+    paintList();
+    setTimeout(function () {
+      var it = document.querySelector('#smpcList .smpc-item[data-i="' + idx + '"]');
+      if (it) {
+        it.classList.add('open');
+        it.scrollIntoView({ block: 'center', behavior: 'smooth' });
+      }
+    }, 60);
+  }
+
+  /* ---------- pane: temuan / rekomendasi ---------- */
+  function renderTemuan() {
+    var rows = D.kriteria.map(function (k, i) { return { k: k, i: i }; })
+      .filter(function (o) { return o.k.f; });
+    $('pane-temuan').innerHTML =
+      '<div class="smpc-bar"><span style="font-size:11.5px;color:#8fa1bf">' + rows.length +
+      ' kriteria dengan catatan auditor, diurutkan per elemen.</span></div>' +
+      '<div class="smpc-wrap"><table class="smpc-tbl"><thead><tr>' +
+      '<th style="width:52px">Butir</th><th style="width:130px">Elemen</th><th>Temuan</th><th style="width:74px">Nilai</th>' +
+      '</tr></thead><tbody>' + rows.map(function (o) {
+        return '<tr><td class="no">' + (els[o.k.e].i + 1) + '.' + o.k.n + '</td>' +
+          '<td style="color:' + els[o.k.e].c + ';font-weight:700">' + esc(els[o.k.e].short) + '</td>' +
+          '<td>' + esc(o.k.f) + '</td>' +
+          '<td><span class="smpc-pill s' + o.k.s + '">' + SCORE_LABEL[o.k.s] + '</span></td></tr>';
+      }).join('') + '</tbody></table></div>';
+  }
+
+  function renderRekom() {
+    var rows = D.kriteria.map(function (k, i) { return { k: k, i: i }; })
+      .filter(function (o) { return o.k.k; });
+    $('pane-rekom').innerHTML =
+      '<div class="smpc-bar"><span style="font-size:11.5px;color:#8fa1bf">' + rows.length +
+      ' rekomendasi perbaikan yang dicatat auditor.</span></div>' +
+      '<div class="smpc-wrap"><table class="smpc-tbl"><thead><tr>' +
+      '<th style="width:52px">Butir</th><th style="width:130px">Elemen</th><th>Rekomendasi</th><th style="width:74px">Nilai</th>' +
+      '</tr></thead><tbody>' + rows.map(function (o) {
+        return '<tr><td class="no">' + (els[o.k.e].i + 1) + '.' + o.k.n + '</td>' +
+          '<td style="color:' + els[o.k.e].c + ';font-weight:700">' + esc(els[o.k.e].short) + '</td>' +
+          '<td>' + esc(o.k.k) + '</td>' +
+          '<td><span class="smpc-pill s' + o.k.s + '">' + SCORE_LABEL[o.k.s] + '</span></td></tr>';
+      }).join('') + '</tbody></table></div>';
+  }
+
+  /* ---------- pane: rencana & tim ---------- */
+  function renderRencana() {
+    var fase = { Plan: [], Do: [], Check: [], Act: [] };
+    els.forEach(function (e) { (fase[e.fase] || fase.Do).push(e); });
+    function faseBox(title, arr, color) {
+      return '<div class="smpc-card" style="margin-bottom:10px">' +
+        '<div class="t" style="color:' + color + '"><i style="background:' + color + '"></i>' + title + '</div>' +
+        arr.map(function (e) {
+          return '<div style="font-size:11px;color:#cbd5e1;padding:3px 0">' + esc(e.short) +
+            ' <span style="color:#5f7291">· ' + e.n + ' kriteria · ' + e.pct.toFixed(1).replace('.', ',') + '%</span></div>';
+        }).join('') + '</div>';
+    }
+    $('pane-rencana').innerHTML =
+      '<div class="smpc-two">' +
+      '<div><div class="smpc-h4">Identitas audit</div>' +
+      '<dl class="smpc-kv">' +
+      '<dt>Unit</dt><dd>' + esc(D.unit) + '</dd>' +
+      '<dt>Lokasi</dt><dd>' + esc(D.lokasi) + '</dd>' +
+      '<dt>Periode</dt><dd>' + esc(D.periode) + '</dd>' +
+      '<dt>Standar</dt><dd>' + esc(D.standar) + '</dd>' +
+      '<dt>Instrumen</dt><dd>5 elemen · ' + D.kriteria.length + ' kriteria</dd>' +
+      '</dl>' +
+      '<div class="smpc-h4" style="margin-top:16px">Tim audit</div>' +
+      '<div class="smpc-team">' + D.tim.map(function (t) { return '<span>' + esc(t) + '</span>'; }).join('') + '</div>' +
+      '</div>' +
+      '<div><div class="smpc-h4">Fase &amp; capaian</div>' +
+      faseBox('PLAN — perencanaan', fase.Plan, '#38bdf8') +
+      faseBox('DO — penerapan', fase.Do, '#a78bfa') +
+      faseBox('CHECK — pemantauan', fase.Check, '#f472b6') +
+      '</div></div>';
+  }
+
+  /* ---------- pane: panduan ---------- */
+  function renderPanduan() {
+    $('pane-panduan').innerHTML =
+      '<div class="smpc-two">' +
+      '<div><div class="smpc-h4">Skala penilaian per kriteria</div>' +
+      '<table class="smpc-tbl"><tbody>' +
+      '<tr><td class="no">2</td><td><b style="color:#6ee7b7">Sesuai</b><br><span style="font-size:10.5px;color:#8fa1bf">Ada bukti dokumentasi <i>dan</i> diterapkan</span></td></tr>' +
+      '<tr><td class="no">1</td><td><b style="color:#fcd34d">Sebagian</b><br><span style="font-size:10.5px;color:#8fa1bf">Dokumentasi ada tanpa penerapan, atau sebaliknya</span></td></tr>' +
+      '<tr><td class="no">0</td><td><b style="color:#fda4af">Belum</b><br><span style="font-size:10.5px;color:#8fa1bf">Tidak ada bukti dokumentasi maupun penerapan</span></td></tr>' +
+      '</tbody></table>' +
+      '<div class="smpc-note" style="margin-top:10px">Rumus: <b>nilai elemen = Σ(skor/2) × bobot ÷ jumlah kriteria</b>. ' +
+      'Total = jumlah nilai seluruh elemen, dinyatakan dalam persen.</div>' +
+      '</div>' +
+      '<div><div class="smpc-h4">Ambang predikat</div>' +
+      '<div class="smpc-ladder">' +
+      ladder('Emas', 86, '#fbbf24') + ladder('Perak', 71, '#cbd5e1') +
+      ladder('Perunggu', 56, '#d97706') + ladder('Pembinaan', 0, '#f43f5e') +
+      '</div>' +
+      '<div class="smpc-note" style="margin-top:12px"><b>Catatan angka.</b> Hasil hitung ulang dari ' +
+      D.kriteria.length + ' kriteria: <b>' + pct.toFixed(2).replace('.', ',') + '%</b>. File kerja menulis 58,85% ' +
+      '(subtotal Pola Pengamanan kurang 2 baris), sedangkan Laporan Pelaksanaan mencantumkan 69,86% dengan rekap ' +
+      'per elemen yang berbeda. Ketiganya masuk predikat Perunggu.</div>' +
+      '</div></div>';
+  }
+  function ladder(name, min, color) {
+    return '<div class="smpc-step"><div style="color:#cbd5e1;font-weight:700">' + name + '</div>' +
+      '<div class="tr"><i style="width:' + Math.min(100, min) + '%;background:' + color + '"></i></div>' +
+      '<div style="text-align:right;color:#8fa1bf">&ge;' + min + '%</div></div>';
+  }
+
+  /* ---------- tab ---------- */
+  function switchTab(name) {
+    [].forEach.call(document.querySelectorAll('.smpc-tab'), function (b) {
+      b.setAttribute('aria-selected', b.getAttribute('data-pane') === name ? 'true' : 'false');
+    });
+    [].forEach.call(document.querySelectorAll('.smpc-pane'), function (p) {
+      p.classList.toggle('on', p.id === 'pane-' + name);
+    });
+  }
+
+  function init() {
+    renderHead();
+    renderElems();
+    animateRing();
+    renderRingkasan();
+    renderKriteria();
+    renderTemuan();
+    renderRekom();
+    renderRencana();
+    renderPanduan();
+    $('smpcTabs').addEventListener('click', function (ev) {
+      var b = ev.target.closest('.smpc-tab');
+      if (b) switchTab(b.getAttribute('data-pane'));
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();
+</script>
 </body>
 </html>
