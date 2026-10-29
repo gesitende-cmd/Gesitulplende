@@ -5719,27 +5719,11 @@ html[data-view="mobile"] .au-time { font-size: 1.4rem; }
             const badge = document.getElementById('autoApprovalState');
             const hint = document.getElementById('autoApprovalHint');
             if (!badge) return;
-            badge.textContent = 'CEK…';
-            badge.className = 'text-[10px] font-bold px-2 py-1 rounded-full bg-slate-200 text-slate-500 whitespace-nowrap';
-            if (hint) hint.textContent = '';
-            fetch(AUTO_APPROVAL_BASE + '/ping', { cache: 'no-store' })
-                .then(r => r.json())
-                .then(d => {
-                    if (d.running) {
-                        badge.textContent = 'BERJALAN';
-                        badge.className = 'text-[10px] font-bold px-2 py-1 rounded-full bg-amber-100 text-amber-700 whitespace-nowrap';
-                        if (hint) hint.textContent = 'Auto approval sedang berjalan. Jangan tutup jendela prosesnya.';
-                    } else {
-                        badge.textContent = 'SIAP';
-                        badge.className = 'text-[10px] font-bold px-2 py-1 rounded-full bg-emerald-100 text-emerald-700 whitespace-nowrap';
-                        if (hint) hint.textContent = 'Helper aktif di komputer ini. Menekan tombol akan membuka halaman konfirmasi.';
-                    }
-                })
-                .catch(() => {
-                    badge.textContent = 'OFFLINE';
-                    badge.className = 'text-[10px] font-bold px-2 py-1 rounded-full bg-rose-100 text-rose-600 whitespace-nowrap';
-                    if (hint) hint.textContent = 'Helper belum jalan. Jalankan "autoapproval_server.py" di komputer ini, atau minta Hermes menyalakannya.';
-                });
+            // Deteksi langsung ke 127.0.0.1 diblokir Chrome (Private Network Access),
+            // jadi status sebenarnya ditampilkan di halaman helper setelah tombol ditekan.
+            badge.textContent = 'BUKA';
+            badge.className = 'text-[10px] font-bold px-2 py-1 rounded-full bg-emerald-100 text-emerald-700 whitespace-nowrap';
+            if (hint) hint.textContent = 'Membuka halaman konfirmasi di komputer ini. Jika helper belum aktif, halaman akan menampilkan pesan kesalahan.';
         }
 
         function renderK3InspektaUsers() {
