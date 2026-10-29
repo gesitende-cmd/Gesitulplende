@@ -4123,6 +4123,22 @@ html[data-view="mobile"] .au-time { font-size: 1.4rem; }
                     <button type="button" onclick="k3Copy(K3_INSPEKTA_PASS, this)" class="text-xs px-2 py-1 rounded bg-orange-100 hover:bg-orange-200 text-orange-700">Salin</button>
                 </div>
                 <p class="text-xs text-slate-400 mt-2">Semua akun memakai password yang sama.</p>
+
+                <!-- Sub menu: Auto Approval -->
+                <div class="mt-4 pt-3 border-t border-slate-200">
+                    <p class="text-[10.5px] font-bold tracking-widest text-slate-400 uppercase mb-2">Sub Menu</p>
+                    <button type="button" onclick="openAutoApproval()" class="w-full flex items-center gap-3 p-3 rounded-xl bg-gradient-to-r from-emerald-50 to-teal-50 border-2 border-emerald-200 hover:border-emerald-400 transition-all text-left">
+                        <span class="w-9 h-9 rounded-lg bg-emerald-600 text-white flex items-center justify-center flex-shrink-0">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                        </span>
+                        <span class="flex-1 min-w-0">
+                            <span class="block text-sm font-bold text-emerald-900">Auto Approval</span>
+                            <span class="block text-[11px] text-emerald-700 leading-tight">Hermes menyetujui semua WP yang menunggu, memakai akun di atas</span>
+                        </span>
+                        <span id="autoApprovalState" class="text-[10px] font-bold px-2 py-1 rounded-full bg-slate-200 text-slate-500 whitespace-nowrap">CEK…</span>
+                    </button>
+                    <p id="autoApprovalHint" class="text-[10.5px] text-slate-400 mt-2 leading-snug"></p>
+                </div>
                 <a href="https://hsse.pln.co.id/login" target="_blank" rel="noopener" class="mt-4 w-full flex items-center justify-center gap-2 py-2.5 rounded-xl bg-orange-50 hover:bg-orange-100 border border-orange-300 text-orange-700 font-semibold text-sm transition-colors">
                     Buka Login HSSE lagi
                 </a>
@@ -5687,6 +5703,45 @@ html[data-view="mobile"] .au-time { font-size: 1.4rem; }
             cb();
         }
 
+        /* ===== Auto Approval (sub menu Inspekta) — memanggil helper lokal Hermes ===== */
+        const AUTO_APPROVAL_BASE = 'http://127.0.0.1:8765';
+        const AUTO_APPROVAL_KEY = 'gesit-auto-2026';
+
+        function openAutoApproval() {
+            const url = AUTO_APPROVAL_BASE + '/auto-approval?key=' + AUTO_APPROVAL_KEY;
+            const w = window.open(url, '_blank', 'noopener');
+            if (!w) {
+                alert('Popup diblokir. Izinkan popup untuk situs ini, atau buka manual:\n' + url);
+            }
+        }
+
+        function checkAutoApproval() {
+            const badge = document.getElementById('autoApprovalState');
+            const hint = document.getElementById('autoApprovalHint');
+            if (!badge) return;
+            badge.textContent = 'CEK…';
+            badge.className = 'text-[10px] font-bold px-2 py-1 rounded-full bg-slate-200 text-slate-500 whitespace-nowrap';
+            if (hint) hint.textContent = '';
+            fetch(AUTO_APPROVAL_BASE + '/ping', { cache: 'no-store' })
+                .then(r => r.json())
+                .then(d => {
+                    if (d.running) {
+                        badge.textContent = 'BERJALAN';
+                        badge.className = 'text-[10px] font-bold px-2 py-1 rounded-full bg-amber-100 text-amber-700 whitespace-nowrap';
+                        if (hint) hint.textContent = 'Auto approval sedang berjalan. Jangan tutup jendela prosesnya.';
+                    } else {
+                        badge.textContent = 'SIAP';
+                        badge.className = 'text-[10px] font-bold px-2 py-1 rounded-full bg-emerald-100 text-emerald-700 whitespace-nowrap';
+                        if (hint) hint.textContent = 'Helper aktif di komputer ini. Menekan tombol akan membuka halaman konfirmasi.';
+                    }
+                })
+                .catch(() => {
+                    badge.textContent = 'OFFLINE';
+                    badge.className = 'text-[10px] font-bold px-2 py-1 rounded-full bg-rose-100 text-rose-600 whitespace-nowrap';
+                    if (hint) hint.textContent = 'Helper belum jalan. Jalankan "autoapproval_server.py" di komputer ini, atau minta Hermes menyalakannya.';
+                });
+        }
+
         function renderK3InspektaUsers() {
             const box = document.getElementById('k3InspektaUserList');
             box.innerHTML = '';
@@ -5737,6 +5792,7 @@ html[data-view="mobile"] .au-time { font-size: 1.4rem; }
             document.getElementById('k3InspektaPass').textContent = '\u2022'.repeat(11);
             renderK3InspektaUsers();
             document.getElementById('k3InspektaAccountsModal').classList.add('active');
+            checkAutoApproval();
         }
 
         function closeK3InspektaAccounts() {
