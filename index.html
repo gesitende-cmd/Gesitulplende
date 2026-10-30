@@ -2901,6 +2901,10 @@ html[data-view="mobile"] .au-time { font-size: 1.4rem; }
                                         <p class="text-white/80 text-xs mt-0.5 k3-mono">WORKING PERMIT // WAITING APPROVAL</p>
                                     </div>
                                     <span id="k3wpCount" class="flex-shrink-0 text-xs font-bold px-2.5 py-1 rounded-full bg-white/20 text-white">0</span>
+                                    <button type="button" onclick="shareK3WpWA()" title="Bagikan rekap ke WhatsApp" class="flex-shrink-0 flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-full bg-emerald-500/20 hover:bg-emerald-500/35 border border-emerald-400/50 text-emerald-100 transition-colors">
+                                        <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M17.5 14.4c-.3-.2-1.7-.9-2-1s-.5-.1-.7.1-.8 1-.9 1.2-.3.2-.6.1a8 8 0 01-2.4-1.5 9 9 0 01-1.6-2c-.2-.3 0-.5.1-.6l.5-.6.3-.5v-.5l-1-2.3c-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1.1 2.9 1.2 3.1c.2.2 2.1 3.2 5.1 4.5.7.3 1.3.5 1.7.6.7.2 1.4.2 1.9.1.6-.1 1.7-.7 2-1.4.2-.7.2-1.3.2-1.4-.1-.2-.3-.3-.5-.4zM12 2a10 10 0 00-8.6 15L2 22l5.2-1.4A10 10 0 1012 2z"/></svg>
+                                        WA
+                                    </button>
                                 </div>
                                 <div class="px-5 pt-4 pb-2 flex flex-wrap items-center gap-2 text-[11px] k3-mono">
                                     <span class="px-2 py-0.5 rounded-full bg-amber-500/15 border border-amber-400/40 text-amber-200">2025 – 2026</span>
@@ -9814,6 +9818,41 @@ function toggleMon1Sound() {
         btn.classList.remove('bg-cyan-500/30');
         icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5L6 9H3v6h3l5 4V5z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M22 9l-6 6M16 9l6 6"/>';
     }
+}
+
+/* ===== Monitoring 3: bagikan ke WhatsApp ===== */
+function buildK3WpWaText() {
+    const rows = window.K3_WP_WAITING || [];
+    const short = function (no) {
+        const p = String(no).split('/');
+        return p.length >= 4 ? p[0] + '/' + p[2] + '/' + p[3] : no;
+    };
+    const groups = {};
+    rows.forEach(function (r) {
+        (r[3] || []).forEach(function (x) {
+            const key = x[0] + '|' + x[1];
+            (groups[key] = groups[key] || []).push(short(r[0]));
+        });
+    });
+    const lines = ['*WP MENUNGGU APPROVAL — ULPL ENDE*',
+                   'Data per 30 Oktober 2026 · total ' + rows.length + ' WP', ''];
+    Object.keys(groups).sort(function (a, b) { return groups[b].length - groups[a].length; })
+        .forEach(function (k) {
+            const role = k.split('|')[0], name = k.split('|')[1], list = groups[k];
+            lines.push('*Menunggu ' + role + ' (' + name + ') — ' + list.length + ' WP*');
+            lines.push(list.join(', '));
+            lines.push('');
+        });
+    lines.push('Detail: gesitulplende.com → K3L & KAM → Keselamatan, Kesehatan, Kerja');
+    return lines.join('\n');
+}
+
+function shareK3WpWA() {
+    const text = buildK3WpWaText();
+    try { navigator.clipboard.writeText(text); } catch (e) {}
+    const url = 'https://wa.me/?text=' + encodeURIComponent(text);
+    const w = window.open(url, '_blank', 'noopener');
+    if (!w) alert('Popup diblokir. Teks rekap sudah disalin ke clipboard — tempel manual di grup WhatsApp.');
 }
 
 /* ===== Monitoring 3: daftar WP menunggu + nama PIC yang belum approve ===== */
