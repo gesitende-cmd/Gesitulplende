@@ -2793,6 +2793,12 @@ html[data-view="mobile"] .au-time { font-size: 1.4rem; }
                                         <h2 class="k3-font font-bold text-base leading-tight truncate">MONITORING 1</h2>
                                         <p class="text-white/80 text-xs mt-0.5 k3-mono">HIRAYSIN // KANAL-01</p>
                                     </div>
+                                    <button type="button" id="k3Mon1SoundBtn" onclick="toggleMon1Sound()" title="Suara Monitoring 1: MATI — klik untuk menyalakan" aria-label="Atur suara Monitoring 1" class="flex-shrink-0 w-9 h-9 rounded-lg bg-white/15 hover:bg-white/25 border border-white/30 flex items-center justify-center transition-colors">
+                                        <svg id="k3Mon1SoundIcon" class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5L6 9H3v6h3l5 4V5z"/>
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M22 9l-6 6M16 9l6 6"/>
+                                        </svg>
+                                    </button>
                                     <a href="https://fransmbeo230799-coder.github.io/Hiraysin/" target="_blank" rel="noopener" title="Buka di tab baru" class="flex-shrink-0 w-9 h-9 rounded-lg bg-white/15 hover:bg-white/25 border border-white/30 flex items-center justify-center transition-colors">
                                         <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
@@ -2804,13 +2810,24 @@ html[data-view="mobile"] .au-time { font-size: 1.4rem; }
                                         </svg>
                                     </button>
                                 </div>
-                                <div class="k3-frame-wrap" style="height: 600px;">
+                                <div class="k3-frame-wrap" style="height: 600px; position: relative;">
                                     <iframe
-                                        src="https://fransmbeo230799-coder.github.io/Hiraysin/"
+                                        id="k3Mon1Frame"
+                                        data-src="https://fransmbeo230799-coder.github.io/Hiraysin/"
+                                        src="about:blank"
                                         allowfullscreen
                                         loading="lazy"
                                         sandbox="allow-storage-access-by-user-activation allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox">
                                     </iframe>
+                                    <div id="k3Mon1Muted" style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;background:#0b1220;color:#8fa1bf;text-align:center;padding:24px;">
+                                        <svg class="w-10 h-10" style="color:#38bdf8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5L6 9H3v6h3l5 4V5z"/>
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M22 9l-6 6M16 9l6 6"/>
+                                        </svg>
+                                        <p style="font-weight:700;color:#e8eefc;margin:0;">Monitoring 1 dibisukan</p>
+                                        <p style="font-size:12px;max-width:320px;line-height:1.5;margin:0;">Dashboard tidak dimuat, jadi tidak ada suara yang diputar. Tekan tombol spiker di atas untuk menyalakan suara sekaligus memuat dashboard.</p>
+                                        <button type="button" onclick="toggleMon1Sound()" style="margin-top:4px;background:linear-gradient(135deg,#38bdf8,#a78bfa);color:#06111f;font-weight:800;font-size:12px;padding:9px 16px;border-radius:9px;border:0;cursor:pointer;">Nyalakan suara</button>
+                                    </div>
                                 </div>
                                 <div class="px-5 pb-4 -mt-1 flex items-center gap-1.5 text-xs text-slate-500 k3-mono">
                                     <span class="k3-live-dot" style="background:#22d3ee;"></span>
@@ -2868,6 +2885,30 @@ html[data-view="mobile"] .au-time { font-size: 1.4rem; }
                                         </svg>
                                         BUKA DI TAB BARU
                                     </a>
+                                </div>
+                            </div>
+
+                            <!-- Monitoring 3: Working Permit menunggu approval -->
+                            <div class="k3-card" id="k3StaticCard-m3">
+                                <div class="k3-card-head theme-safety">
+                                    <div class="k3-icon-badge">
+                                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
+                                        </svg>
+                                    </div>
+                                    <div class="flex-1 min-w-0">
+                                        <h2 class="k3-font font-bold text-base leading-tight truncate">MONITORING 3</h2>
+                                        <p class="text-white/80 text-xs mt-0.5 k3-mono">WORKING PERMIT // WAITING APPROVAL</p>
+                                    </div>
+                                    <span id="k3wpCount" class="flex-shrink-0 text-xs font-bold px-2.5 py-1 rounded-full bg-white/20 text-white">0</span>
+                                </div>
+                                <div class="px-5 pt-4 pb-2 flex flex-wrap items-center gap-2 text-[11px] k3-mono">
+                                    <span class="px-2 py-0.5 rounded-full bg-amber-500/15 border border-amber-400/40 text-amber-200">2025 – 2026</span>
+                                    <span class="text-slate-400">WP yang melibatkan akun Frans Juan Ady Mbeo dan belum selesai</span>
+                                </div>
+                                <div class="px-5 pb-4">
+                                    <div id="k3wpList" style="max-height:460px;overflow:auto;display:flex;flex-direction:column;gap:6px;"></div>
+                                    <p class="text-[10.5px] text-slate-500 mt-3 leading-snug">Data per 30 Oktober 2026, diambil dari Inspekta HSSE. Angka pada badge = jumlah WP. Kolom kanan = tahap yang masih menunggu.</p>
                                 </div>
                             </div>
 
@@ -9746,6 +9787,60 @@ window.SMPC = {"unit":"PT Paiton Operation Maintenance Indonesia","lokasi":"Desa
     init();
   }
 })();
+</script>
+<!-- K3-MON3 -->
+<script>
+window.K3_WP_WAITING = [["0131/41600902/X/2026","2026-11-09","Pekerjaan Pemeliharaan Rutin P0 PLTD Mautapaga","Pengawas, Direksi, Mgmt Rep"],["0096/41600902/X/2026","2026-11-02","Pekerjaan Pemeliharaan Rutin P0 PLTD Ndoriwoi","Direksi, Mgmt Rep"],["0095/41600902/X/2026","2026-11-02","Pekerjaan Pemeliharaan Rutin P0 PLTD Mautapaga","Pengawas, Direksi, Mgmt Rep"],["0126/41600902/X/2026","2026-11-02","Unloading BBM di PLTD Mautapaga","Pengawas, Mgmt Rep"],["0101/41600902/X/2026","2026-11-02","Pekerjaan Pemeliharaan P1 Mesin Diesel PLTD Mautapaga","Pengawas, Direksi, Mgmt Rep"],["0102/41600902/X/2026","2026-11-02","Pekerjaan Pemeliharaan P1 Mesin Diesel PLTD Ndoriwoi","Direksi, Mgmt Rep"],["0130/41600902/X/2026","2026-10-30","Pemantauan Ling. PLTS Papagarang","Pengawas, Direksi, Mgmt Rep"],["0124/41600902/X/2026","2026-10-30","Unloading BBM di PLTD Mautapaga","Mgmt Rep"],["0123/41600902/X/2026","2026-10-29","Unloading BBM di PLTD Mautapaga","Mgmt Rep"],["0121/41600902/X/2026","2026-10-28","Unloading BBM di PLTD Mautapaga","Mgmt Rep"],["0113/41600902/X/2026","2026-10-26","PEKERJAAN PEMELIHARAAN P0 PLTS MESSAH","Mgmt Rep"],["0117/41600902/X/2026","2026-10-26","PEKERJAAN PEMELIHARAAN P0 PLTMH OGI","Pengawas, Mgmt Rep"],["0090/41600902/X/2026","2026-10-26","Pekerjaan Pemeliharaan P1 Mesin Diesel PLTD Ndoriwoi","Direksi, Mgmt Rep"],["0089/41600902/X/2026","2026-10-26","Pekerjaan Pemeliharaan P1 Mesin Diesel PLTD Mautapaga","Pengawas, Direksi, Mgmt Rep"],["0083/41600902/X/2026","2026-10-26","Pekerjaan Pemeliharaan Rutin P0 PLTD Mautapaga","Pengawas, Direksi, Mgmt Rep"],["0084/41600902/X/2026","2026-10-26","Pekerjaan Pemeliharaan Rutin P0 PLTD Ndoriwoi","Direksi, Mgmt Rep"],["0078/41600902/X/2026","2026-10-19","PEKERJAAN PEMELIHARAAN P0 PLTMH OGI","Pengawas, Mgmt Rep"],["0084/41600902/III/2026","2026-03-18","PEKERJAAN PEMELIHARAAN P0 PLTS PAPAGARANG","Mgmt Rep"],["0023/41600902/XI/2025","2025-11-23","PEMBANGUNAN KONTRUKSI SIPIL PLTD ENDE","Direksi, Mgmt Rep"],["0013/41600902/XI/2025","2025-11-15","ASSEMBLI ENGGINE","Direksi, Mgmt Rep"],["0004/41600902/XI/2025","2025-11-07","ASSEMBLI ENGINE","Direksi, Mgmt Rep"],["0007/41600902/X/2025","2025-11-01","Unloading Dan Assembling Peralatan","Direksi, Mgmt Rep"],["0005/41600902/X/2025","2025-10-24","Pembuatan Pondasi Oil & Coolant Storage","Direksi, Mgmt Rep"],["0003/41600902/X/2025","2025-10-17","Pembuatan Pondasi Trafo Dan Kontainer Spare","Direksi, Mgmt Rep"],["0002/41600902/XI/2025","2025-10-10","pembuatan area wearhouse dan fasilitas MCK","Direksi, Mgmt Rep"]];
+
+/* ===== Monitoring 1: kendali suara ===== */
+let k3Mon1Sound = false;
+function toggleMon1Sound() {
+    const frame = document.getElementById('k3Mon1Frame');
+    const ph = document.getElementById('k3Mon1Muted');
+    const btn = document.getElementById('k3Mon1SoundBtn');
+    const icon = document.getElementById('k3Mon1SoundIcon');
+    if (!frame || !btn) return;
+    k3Mon1Sound = !k3Mon1Sound;
+    if (k3Mon1Sound) {
+        frame.src = frame.getAttribute('data-src');
+        if (ph) ph.style.display = 'none';
+        btn.title = 'Suara Monitoring 1: AKTIF — klik untuk mematikan';
+        btn.classList.add('bg-cyan-500/30');
+        icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5L6 9H3v6h3l5 4V5z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.5 8.5a5 5 0 010 7M18.5 5.5a9 9 0 010 13"/>';
+    } else {
+        frame.src = 'about:blank';
+        if (ph) ph.style.display = 'flex';
+        btn.title = 'Suara Monitoring 1: MATI — klik untuk menyalakan';
+        btn.classList.remove('bg-cyan-500/30');
+        icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5L6 9H3v6h3l5 4V5z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M22 9l-6 6M16 9l6 6"/>';
+    }
+}
+
+/* ===== Monitoring 3: daftar WP menunggu ===== */
+function renderK3WpWaiting() {
+    const box = document.getElementById('k3wpList');
+    if (!box || !window.K3_WP_WAITING) return;
+    const rows = window.K3_WP_WAITING;
+    const badge = document.getElementById('k3wpCount');
+    if (badge) badge.textContent = rows.length;
+    box.innerHTML = rows.map(function (r) {
+        const no = r[0] || '', tgl = r[1] || '', kerja = r[2] || '', pend = r[3] || '';
+        return '<div style="border:1px solid rgba(148,163,184,.22);border-radius:10px;padding:9px 11px;background:rgba(15,23,42,.55)">' +
+            '<div style="display:flex;gap:8px;align-items:baseline;flex-wrap:wrap">' +
+            '<span class="k3-mono" style="font-size:11px;font-weight:800;color:#7dd3fc">' + no + '</span>' +
+            '<span class="k3-mono" style="font-size:10.5px;color:#64748b">' + tgl + '</span>' +
+            '</div>' +
+            '<div style="font-size:12px;color:#dbe6f8;margin-top:3px;line-height:1.4">' + kerja + '</div>' +
+            '<div style="font-size:10.5px;color:#fbbf24;margin-top:4px">menunggu: ' + pend + '</div>' +
+            '</div>';
+    }).join('');
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', renderK3WpWaiting);
+} else {
+    renderK3WpWaiting();
+}
 </script>
 </body>
 </html>
